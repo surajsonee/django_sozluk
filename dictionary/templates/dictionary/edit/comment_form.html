@@ -1,0 +1,46 @@
+{% extends "dictionary/base.html" %}
+
+{% load widget_tweaks filters i18n %}
+
+{% block title %}{{ entry.topic.title }}#{{ entry.pk }} {{ updating|yesno:_(" - updating comment, - commenting") }}{% endblock %}
+
+{% block content %}
+    <h1 class="h4">
+        <strong><a href="{{ entry.topic.get_absolute_url }}">{{ entry.topic.title }}</a></strong>
+        <small><strong><a href="{{ entry.get_absolute_url }}">#{{ entry.pk }}</a> {{ updating|yesno:_(" - updating comment, - commenting") }}</strong></small>
+    </h1>
+    <h2 class="h6">
+        {% blocktrans trimmed with name=entry.author.username url=entry.author.get_absolute_url %}
+            <strong>user with nickname <a href="{{ url }}">{{ name }}</a> wrote:</strong>
+        {% endblocktrans %}
+    </h2>
+
+    <span class="text-formatted d-block my-3">{{ entry.content|formatted|linebreaksbr }}</span>
+
+    <div class="d-flex">
+        <a href="{{ entry.get_absolute_url }}" class="ml-auto">
+            <time class="ml-auto date" datetime="{{entry.date_created|date:'c'}}" data-edit-date="{{ entry.date_edited|date:'c' }}"></time>
+        </a>
+    </div>
+    <section class="user-content my-4">
+        {% if not user.is_novice %}
+            <form method="post" action="{% url 'image-upload' %}" class="dropzone" id="user-image-upload" style="display: none">{% csrf_token %}</form>
+        {% endif %}
+        <section class="user-comments">
+            {% include "dictionary/includes/editor_buttons.html" %}
+            <form method="post">
+                {% csrf_token %}
+                {% blocktrans asvar text_placeholder with title=entry.topic.title %}comment on this entry written in {{ title }}...{% endblocktrans %}
+                {% trans "Comment content area" as area_label %}
+                {% render_field form.content|attr:"autofocus" placeholder=text_placeholder id="user_content_edit" class="entry_editor form-control" rows="10" spellcheck="true" aria-label=area_label %}
+
+                <div class="d-flex align-items-center">
+                    {% if updating %}
+                        <button name="delete" value="true" onclick="return confirm(`{% trans 'Are you sure?'' %}`);" type="submit" class="btn btn-sm">{% trans "delete" %}</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-django ml-auto">{{ updating|yesno:_("update comment,comment") }}</button>
+                </div>
+            </form>
+        </section>
+    </section>
+{% endblock %}

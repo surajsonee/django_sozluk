@@ -1,0 +1,416 @@
+{% load filters functions i18n static cache %}
+{% get_current_language as LANGUAGE_CODE %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    {% block metatags %}{% endblock %}
+
+    {# In production, some static files should be served together. #}
+    <link rel="shortcut icon" type="image/png" href="{% static 'dictionary/img/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static "dictionary/css/helpers.css" %}">
+    <link rel="stylesheet" href="{% static "dictionary/css/style.css" %}">
+    <link rel="stylesheet" href="{% static "dictionary/css/prism.css" %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap">
+
+    <script defer src="{% url 'javascript-catalog' %}"></script>
+    <script defer src="{% static 'dictionary/js/dist/index.js' %}"></script>
+    <title>{% block supertitle %}{% block title %}{% endblock %} - {{ request.site.name }}{% endblock %}</title>
+</head>
+<body class="{{ request.theme }}{% block bodyclass %}{% endblock %}" {% block bodyattr %}{% endblock %} id="{{ user.is_authenticated|yesno:"au,ua" }}">
+{% include "dictionary/includes/icons.svg" %}
+
+<header class="page_header">
+
+    <div class="container">
+        <div class="small-device-alert">{% trans "the device is too small!" %}</div>
+
+        <div class="top-bar">
+
+            <button class="content-skipper d-print-none" data-href="#main">{% trans "Skip to main content" %}</button>
+
+            {# <!--- logo --> #}
+            <div class="logo">
+                <a aria-label="{% trans "Dictionary home page" %}" href="{% url 'home' %}"></a>
+            </div>
+
+            {# Advanced search #}
+            <form method="GET" class="header-search-form" action="{% url 'topic-search' %}" id="header_search_form">
+                <div class="input-group searchbox">
+                    <input name="q" type="text" placeholder="{% trans "topic, #entry or @author" %}" class="searchbox-text form-control" id="header_search" form="header_search_form" aria-label="{% trans "Search term" %}">
+                    <div class="input-group-append">
+
+                        <button type="button" class="btn dropbtn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">{% trans "Open advanced search menu" %}</span>
+                        </button>
+
+                        <button class="btn searchbtn" type="submit" title="{% trans "Search" %}">
+                            <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 16 16">
+                                <use href="#search"></use>
+                            </svg>
+                        </button>
+
+                        <div class="dropdown-menu no-collapse no-arrows dropdown-advanced-search p-0">
+                            <div class="px-3 py-2">
+                                {% include "dictionary/includes/forms/extended_search.html" with source="dropdown" %}
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-django stretch" id="perform_advanced_search">{% trans "search fabulously" %}</button>
+                                </div>
+                                <a role="button" tabindex="0" class="dropdown-item text-center dropdown-close" id="close_search_dropdown">{% trans "nevermind" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {# Advanced search #}
+
+            {# <!--- user navigation --> #}
+
+
+            {% if user.is_authenticated %}
+                <nav id="user-navigation">
+                    {% with sum=user.unread_topic_count.sum %}
+                        <a aria-label="{% trans "following topics" %}{% if sum > 0 %} ({{ sum }} {% trans "unread" %}){% endif %}" href="{% url 'activity' %}">
+                            {% if sum > 0 %}
+                                <div class="badge user-badge">{{ sum }}</div>
+                            {% endif %}
+                            <svg fill="currentColor" width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#bell"></use>
+                            </svg>
+                            <span>{% trans "activity" %}</span>
+                        </a>
+                    {% endwith %}
+                    {% with count=user.unread_message_count %}
+                        <a href="{% url 'messages' %}" aria-label="{% trans "messages" %}{% if count > 0 %} ({{ count }} {% trans "unread" %}){% endif %}">
+                            {% if count > 0 %}
+                                <div class="badge user-badge">{{ count }}</div>
+                            {% endif %}
+                            <svg style="transform: scaleX(-1);" fill="currentColor" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#chat"></use>
+                            </svg>
+                            <span>{% trans "messages" %}</span>
+                        </a>
+                    {% endwith %}
+                    <a data-toggle="dropdown" role="button" tabindex="0" aria-haspopup="true" aria-label="{% trans "Account Menu" %}" id="user-dropdown">
+                        <svg fill="currentColor" width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#person"></use>
+                        </svg>
+                        <span>
+                            <span>{% trans "me" %}</span>
+                            <svg fill="currentColor" width="18" height="14" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#caret-down"></use>
+                            </svg>
+                        </span>
+                    </a>
+
+                    <div class="user-dropdown dropdown-menu no-collapse icon-assisted" aria-labelledby="user-dropdown">
+                        <a class="dropdown-item" href="{{ user.get_absolute_url }}">
+                            <svg fill="currentColor" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#person-circle"></use>
+                            </svg>
+                            {% trans "my profile" %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'user_preferences' %}">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#cog-border"></use>
+                            </svg>
+                            {% trans "settings" %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'category_list' %}">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#bookmarks"></use>
+                            </svg>
+                            {% trans "channels" %}
+                        </a>
+                        {% if not user.is_novice %}
+                            <a class="dropdown-item" href="{% url 'image-list' %}">
+                                <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#images"></use>
+                                </svg>
+                                {% trans "my images" %}
+                            </a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'people' %}">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#people"></use>
+                            </svg>
+                            {% trans "following/blocked" %}
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#logout"></use>
+                            </svg>
+                            {% trans "log out" %}
+                        </a>
+                    </div>
+                </nav>
+
+
+            {% else %}
+                <nav class="usermenu" aria-label="{% trans "Account Menu" %}">
+                    <ul class="m-0 py-1 px-0">
+                        <li><a href="{% url 'login' %}?next={% firstof request.get_full_path|urlencode '/' %}">{% trans "log in" %}</a></li>
+                        <li><a href="{% url 'register' %}">{% trans "register" %}</a></li>
+                    </ul>
+                </nav>
+            {% endif %}
+
+        </div>
+
+        {# <!--- categories and mobile navigation --> #}
+        <nav class="sub-nav" aria-label="{% trans "Category menu" %}">
+            <ul class="mobile-only">
+                {% render_header_link "today" %}
+                {% render_header_link "popular" %}
+                {% render_header_link "top" %}
+                {% render_header_link "today-in-history" %}
+                {% render_header_link "acquaintances" %}
+
+                {% if user.is_authenticated %}
+                    <li class="key-clickable" tabindex="0" id="usermenu_mobile" data-toggle="dropdown">
+                        <svg fill="currentColor" width="16" height="24" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#more"></use>
+                            <title>{% trans "Account Menu" %}</title>
+                        </svg>
+                    </li>
+
+                    <div class="usermenu-dropdown dropdown-menu icon-assisted" aria-labelledby="usermenu_mobile">
+                        <a href="{% url "category_list" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#bookmarks"></use>
+                            </svg>
+                            {% trans "channels" %}
+                        </a>
+                        <a href="{% url "topic_list" slug="drafts" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#saved"></use>
+                            </svg>
+                            {% trans "drafts" %}
+                        </a>
+                        <a href="{% url "topic_list" slug="wishes" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#present"></use>
+                            </svg>
+                            {% trans "wishes" %}
+                        </a>
+                        <a href="{% url "topic_list" slug="followups" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#side-note"></use>
+                            </svg>
+                            {% trans "followups" %}
+                        </a>
+                        <a href="{% url "topic_list" slug="novices" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#experimental"></use>
+                            </svg>
+                            {% trans "novices" %}
+                        </a>
+                        <a href="{% url "topic_list" slug="search" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#search"></use>
+                            </svg>
+                            {% trans "advanced search" %}
+                        </a>
+                        {% if not user.is_novice %}
+                            <a class="dropdown-item" href="{% url 'image-list' %}">
+                                <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#images"></use>
+                                </svg>
+                                {% trans "my images" %}
+                            </a>
+                        {% endif %}
+                        <a href="{% url "people" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#people"></use>
+                            </svg>
+                            {% trans "following/blocked" %}
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="{% url "logout" %}" class="dropdown-item">
+                            <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#logout"></use>
+                            </svg>
+                            {% trans "log out" %}
+                        </a>
+                    </div>
+
+                {% else %}
+                    <li>
+                        <a href="{% url 'login' %}?next={% firstof request.get_full_path|urlencode '/' %}">{% trans "log in" %}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'register' %}">{% trans "register" %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="desktop-only">
+
+                {% render_header_link 'today' %}
+                {% render_header_link 'popular' %}
+                {% render_header_link 'top' %}
+                {% render_header_link 'acquaintances' %}
+                {% render_header_link 'drafts' %}
+                {% render_header_link 'followups' %}
+                {% render_header_link 'wishes' %}
+                {% render_header_link 'novices' %}
+                {% render_header_link 'today-in-history' %}
+
+                {% for category in nav_categories|slice:":4" %}
+                    <li {% if left_frame.slug == category.slug %}class="active"{% endif %} data-lf-slug="{{ category.slug }}">
+                        <a href="{{ category.get_absolute_url }}" title="{{ category.description }}">#{{ category.name }}</a>
+                    </li>
+                {% endfor %}
+
+                <li class="key-clickable" id="category-expand" data-toggle="dropdown" tabindex="0" aria-haspopup="true" aria-label="{% trans "Other Channels" %}">
+                    <svg fill="currentColor" width="16" height="24" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#more"></use>
+                    </svg>
+                </li>
+
+                <div class="more_tags_dropdown dropdown-menu" aria-labelledby="category-expand">
+
+                    {% for category in nav_categories|slice:"4:12" %}
+                        <a title="{{ category.description }}" data-lf-slug="{{ category.slug }}" class="dropdown-item{% if left_frame.slug == category.slug %} active{% endif %}" href="{{ category.get_absolute_url }}">#{{ category.name }}</a>
+                    {% endfor %}
+
+                    <div class="dropdown-divider"></div>
+                    <a title="{% trans "topics with no channels" %}" class="dropdown-item{% if left_frame.slug == "uncategorized" %} active{% endif %}" data-lf-slug="uncategorized" href="{% url 'topic_list' slug='uncategorized' %}">{% trans "uncategorized" %}</a>
+                    <a href="{% url 'category_list' %}" class="dropdown-item regular">{% trans "all channels" %}</a>
+                </div>
+            </ul>
+        </nav>
+    </div>
+
+</header>
+
+
+{#<!-- content -->#}
+
+<div class="container content{{ request.is_mobile|yesno:" lf-hidden," }}">
+
+    {% if not request.is_mobile %}
+        <aside class="left-frame tinybar" id="left-frame-nav" aria-label="{% trans "Topic list" %}">
+            {% include "dictionary/includes/left_frame.html" %}
+        </aside>
+    {% endif %}
+
+    {# page content #}
+    <main class="content-frame" id="main">
+        {% block content %}{% endblock %}
+    </main>
+
+
+    <aside class="right-frame" id="right-frame">
+        {% block rightframe %}{% endblock %}
+
+        {% cache None footer user.is_authenticated LANGUAGE_CODE request.theme %}
+            {% load flatpages %}
+            {% get_flatpages for user as flatpages %}
+            {% get_external_urls as external_urls %}
+
+            <footer class="body-footer">
+                <header class="d-flex align-items-start justify-content-between mb-2">
+                    <h2 class="h5 m-0">{{ request.site.name }}</h2>
+                    <button class="btn btn-sm m-0 p-0" data-toggle="theme">
+                        <svg fill="currentColor" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#{% if request.theme == "dark" %}sun{% else %}moon{% endif %}"></use>
+                            <title>{% trans "Toggle dark mode" %}</title>
+                        </svg>
+                    </button>
+                </header>
+                <ul>
+                    <li><a href="{% url 'general-report' %}">{% trans "contact" %}</a></li>
+                    <li><a href="{% url 'announcements-index' %}">{% trans "announcements" %}</a></li>
+                    {% for page in flatpages|order_by:"-metaflatpage__weight url" %}
+                        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                    {% endfor %}
+
+                    {% for external in external_urls %}
+                        <li><a href="{{ external.url }}" target="_blank" rel="noopener">{{ external.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </footer>
+        {% endcache %}
+
+        {% include "dictionary/includes/devinfo.html" %}
+
+         <form action="{% url 'set_language' %}" method="post" class="mt-1">
+            {% csrf_token %}
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                {% if language.code != LANGUAGE_CODE %}
+                    <button class="btn btn-sm py-1" type="submit" name="language" value="{{ language.code }}">{{ language.name_local }}</button>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </aside>
+
+</div>
+
+{% if user.is_authenticated %}
+    <div class="mobile-nav-wrapper">
+    <nav class="mobile-nav">
+        {% url "user_preferences" as settings_path %}
+        {% url "entry_create" as create_path %}
+        {% url "messages"  as messages_path %}
+        {% url 'activity' as activity_path %}
+
+        <a href="{{ activity_path }}" aria-label="{% trans "following topics" %}"{{ request.path|startswith:activity_path|yesno:' class=active,' }}>
+            <svg fill="currentColor" width="28" height="28" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <use href="#bell"></use>
+            </svg>
+            {% if user.unread_topic_count.sum > 0 %}
+                <div class="badge user-badge">{{ user.unread_topic_count.sum }}</div>
+            {% endif %}
+        </a>
+
+        <a href="{{ messages_path }}" aria-label="{% trans "messages" %}"{{ request.path|startswith:messages_path|yesno:' class=active,' }}>
+            <svg style="transform: scaleX(-1);" fill="currentColor" width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <use href="#chat"></use>
+            </svg>
+            {% if user.unread_message_count > 0 %}
+                <div class="badge user-badge">{{ user.unread_message_count }}</div>
+            {% endif %}
+        </a>
+
+        <a href="{{ create_path }}" aria-label="{% trans "create new entry" %}"{{ request.path|startswith:create_path|yesno:' class=active,' }}>
+            <svg fill="currentColor" width="24" height="24" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                <use href="#edit"></use>
+            </svg>
+        </a>
+
+        {% with user.get_absolute_url as user_path %}
+            <a href="{{ user_path }}" aria-label="{% trans "my profile" %}"{{ request.path|startswith:user_path|yesno:' class=active,' }}>
+                <svg fill="currentColor" width="28" height="28" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <use href="#person"></use>
+                </svg>
+            </a>
+        {% endwith %}
+
+        <a href="{{ settings_path }}" aria-label="{% trans "settings" %}"{{ request.path|startswith:settings_path|yesno:' class=active,' }}>
+            <svg fill="currentColor" width="28" height="28" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <use href="#cog-border"></use>
+            </svg>
+        </a>
+    </nav>
+    </div>
+{% endif %}
+
+{% spaceless %}
+    <ul class="d-none" id="request-messages" data-has-messages="{{ messages|yesno:'true,false' }}">
+        {% for message in messages %}
+            <li data-message="{{ message }}" data-level="{% get_message_level message.level %}" data-extra="{{ message.extra_tags }}"></li>
+        {% endfor %}
+    </ul>
+{% endspaceless %}
+<div class="toast-holder" aria-live="polite"></div>
+
+</body>
+</html>

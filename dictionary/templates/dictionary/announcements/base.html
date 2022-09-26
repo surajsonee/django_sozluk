@@ -1,0 +1,37 @@
+{% extends "dictionary/base.html" %}
+{% load humanize filters i18n %}
+
+{% block title %}{% trans "announcements" context "titleblock" %}{% endblock %}
+
+{% block content %}
+    <h1 class="h4">
+        <strong><a href="{% url 'announcements-index' %}">{% trans "site announcements" %}</a></strong>
+        {% block crumb %}{% endblock %}
+    </h1>
+
+    {% block innercontent %}
+        {% if latest.exists %}
+            {% for post in latest %}
+                {% include "dictionary/announcements/post.html" %}
+            {% endfor %}
+            {% include "dictionary/includes/paginaton.html" with paginator=page_obj %}
+        {% else %}
+            <div class="border rounded p-3 bg-light mb-3">{% trans "there are no announcements yet." %}</div>
+        {% endif %}
+    {% endblock %}
+{% endblock %}
+
+{% block rightframe %}
+    {% if date_list.exists %}
+        <nav class="topic-categories-list">
+            <h2>{% trans "announcement history" %}</h2>
+            <ul class="list-unstyled">
+                {% for date in date_list %}
+                    <li>
+                        <a href="{% url 'announcements-month' year=date.year month=date.month %}" class="date date-month">{{ date|date:"F Y" }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+{% endblock %}

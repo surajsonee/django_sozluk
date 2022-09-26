@@ -1,0 +1,359 @@
+{% extends "dictionary/base.html" %}
+
+{% load filters functions i18n %}
+{% block title %}{% print_topic_title %}{% endblock %}
+
+{# Remove has-entries for permalinks to show full content right away #}
+{% block bodyclass %}{% if not entry_permalink %} has-entries{% endif %}{% endblock %}
+{% block bodyattr %}{% if user.is_authenticated and user.pinned_entry_id %} data-pin="{{ user.pinned_entry_id }}"{% endif %}{% endblock %}
+
+{% block description %}{{ first_entry.content|truncatechars:150 }}{% endblock %}
+{% block metatags %}
+    {% with desc=first_entry.content|truncatechars:150 %}
+        <meta property="og:description" content="{{ desc }}">
+        <meta property="twitter:description" content="{{ desc }}">
+    {% endwith %}
+    <meta property="og:title" content="{{ topic.title }}">
+    <meta property="og:type" content="article">
+    <meta property="twitter:title" content="{{ topic.title }}">
+    <meta property="twitter:card" content="summary">
+{% endblock %}
+
+{% block content %}
+
+    {% with valid=topic.valid populated=topic.has_entries banned=topic.is_banned %}
+    <section class="user_entries" data-topic="{{ topic.title }}">
+            {% if topic.exists %}
+                <header class="entry_header">
+
+                <div class="upper">
+                <div class="topic-title">
+                    <h1 class="d-inline m-0"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></h1>
+                    {% if mode == "search" %}<small>[{% trans "search keywords" %}: <strong>{{ request.GET.keywords.strip }}</strong>]</small>
+                    {% elif mode == "links" %}<small><strong>[{% trans "links" %}]</strong></small>
+                    {% elif mode == "history" %}<small><strong>[{% trans "today in history" %}: </strong>{{ request.GET.year.strip }}]</small>
+                    {% elif mode == "novices" %}<small><strong>[{% trans "novices" %}]</strong></small>
+                    {% elif mode == "following" %}<small><strong>[{% trans "activity" %}]</strong></small>
+                    {% elif mode == "recent" %}<small><strong>[{% trans "followups" %}]</strong></small>
+                    {% elif mode == "acquaintances" %}<small><strong>[{% trans "acquaintances" %}]</strong></small>
+                    {% elif mode == "answered" %}<small><strong>[{% trans "with replies" %}]</strong></small>
+                    {% elif mode == "images" %}<small><strong>[{% trans "images" %}]</strong></small>{% endif %}
+                </div>
+
+                    {% if topic.is_pinned %}
+                        <svg style="transform: scaleX(-1);" fill="currentColor" width="16" height="25" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#pin"></use>
+                            <title>{% trans "This topic is pinned" %}</title>
+                        </svg>
+                    {% endif %}
+                </div>
+
+            {% with mirrors=topic.mirrors.all %}
+                {% if mirrors %}
+                    <div class="mirror-list border bg-light rounded p-3 mb-3">
+                     <span>{% trans "topics with the same title:" %}</span>
+                        <ul class="pl-3 mb-0 list-unstyled">
+                            {% for mirror in mirrors %}
+                               <li class="p-0"><a href="{{ mirror.get_absolute_url }}">{{ mirror.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+                {% if populated %}
+                    <div class="lower d-flex justify-content-between align-items-center{{ is_paginated|yesno:" paginated," }}">
+                    <div class="title_sub">
+                    <span class="nice-filter">{% trans "nice" %}:&nbsp;&nbsp;<a title="{% trans "most liked entries of all time" %}" href="{{ topic.get_absolute_url }}{% if mode != "nice" %}?a=nice{% endif %}" {% if mode == "nice" %}class="active" {% endif %}>{% trans "all" context "nicefilter" %}</a>
+                        <span class="sep">|</span>
+                        <a title="{% trans "most liked entries of today" %}" href="{{ topic.get_absolute_url }}{% if mode != "nicetoday" %}?a=nicetoday{% endif %}" {% if mode == "nicetoday" %}class="active" {% endif %}>{% trans "today" %}</a>
+                    </span>
+
+                        <a data-toggle="dropdown" class="expand topic-search-expander" role="button" tabindex="0">{% trans "search in topic" %}</a>
+
+                        <div class="dropdown-menu no-arrows no-collapse icon-assisted topic-dropdown" data-orientation="bottom-start">
+                            <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=today">
+                                    <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#calendar"></use>
+                                    </svg>
+                                {% trans "today" %}
+                            </a>
+                            <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=links">
+                                <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#link"></use>
+                                </svg>
+                                {% trans "links" %}
+                            </a>
+                            {% if topic.is_ama %}
+                                <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=answered">
+                                    <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#comment"></use>
+                                    </svg>
+                                    {% trans "with replies" %}
+                                </a>
+                            {% endif %}
+                            <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=images">
+                                <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#images"></use>
+                                </svg>
+                                {% trans "images" %}
+                            </a>
+                            {% if user.is_authenticated %}
+                                <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=search&keywords=@{{ user.username }}">
+                                    <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#person"></use>
+                                    </svg>
+                                    {% trans "my entries" %}
+                                </a>
+                                <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=acquaintances">
+                                    <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#people"></use>
+                                    </svg>
+                                    {% trans "acquaintances" %}
+                                </a>
+                                <a class="dropdown-item" href="{{ topic.get_absolute_url }}?a=commands">
+                                    <svg fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#command"></use>
+                                    </svg>
+                                    {% trans "commands" %}
+                                </a>
+                            {% endif %}
+
+                            <a class="dropdown-item px-3">
+                                <form method="GET" action="{{ topic.get_absolute_url }}">
+                                    <div class="input-group">
+                                        <input type="hidden" name="a" value="search">
+                                        <input name="keywords" id="in_topic_search" class="searchbox-text form-control" type="text" placeholder="{% trans "words or @author" %}" aria-label="{% trans "words or @author" %}" required>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-django-link" type="submit">
+                                                <svg fill="currentColor" height="16" width="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#search"></use>
+                                                    <title>{% translate "Search" %}</title>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </a>
+                        </div>
+                        {% if user.is_authenticated %}
+                            {% check_follow_status user topic as status %}
+                            <a role="button" tabindex="0" class="follow-topic-trigger" data-topic-id="{{ topic.id }}">{{ status|yesno:_("unfollow,follow") }}</a>
+                            <a role="button" tabindex="0" class="position-relative snap-user-content" style="top: -2px">
+                                <svg fill="currentColor" width="18" height="18" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#edit"></use>
+                                    <title>{% trans "Skip to entry content area" %}</title>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% include "dictionary/includes/paginaton.html" with paginator=page_obj classlist="pagination" %}
+                </div>
+                {% endif %}
+
+                {% if topic.media and page_obj.number == 1 %}{{ topic.media|mediastamp:mode }}{% endif %}
+
+                </header>
+
+                {% if populated %}
+
+                    {# previous entries button #}
+                    {% if previous_entries_count > 0 %}
+                        {% blocktrans asvar prev count previous_count=previous_entries_count %}{{ previous_count }} more entry{% plural %}{{ previous_count }} more entries{% endblocktrans %}
+                        <a title="{% trans "show all" %}" href="{% if entry_permalink %}{{ topic.get_absolute_url }}{% endif %}?page={{ previous_entries_page }}" class="more-entries-button mt-2">{{ prev }}</a>
+                    {% endif %}
+                    {# end of previous entries button #}
+
+                    {# list of entries #}
+                    <ul class="topic-view-entries entries">
+                        {% if entry_permalink %}
+                            {% for entry in entries %}
+                                {% include "dictionary/includes/entry.html" with permalink="yes" show_comments=topic.is_ama %}
+                            {% endfor %}
+                        {% else %}
+                            {% if page_obj.paginator.count %}
+                                {% for entry in entries %}
+                                    {% if mode == "search" %}
+                                        {% include "dictionary/includes/entry.html" with show_comments=topic.is_ama wordstomark=request.GET.keywords.strip %}
+                                    {% else %}
+                                        {% include "dictionary/includes/entry.html" with show_comments=topic.is_ama %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            {% else %}
+                                {# topic has entries but parameters returned no corresponding entries #}
+                                <p class="mt-2">
+                                    {% if mode == "novices" %}
+                                        <span>{% trans "there has been no entries written by novices today." %}</span>
+                                    {% elif mode == "regular" %}
+                                        <span>{% trans "this topic has no entries written by <u>authors</u>." %}</span>
+                                    {% else %}
+                                        <span>{% trans "no suitable entries were found with the criteria you specified." %}</span>
+                                    {% endif %}
+                                </p>
+
+                                {% if all_entries_count %}
+                                    {% blocktrans asvar allc count all_count=all_entries_count %}show all ({{ all_count }} entry){% plural %}show all ({{ all_count }} entries){% endblocktrans %}
+                                    <a href="{{ topic.get_absolute_url }}" class="more-entries-button">{{ allc }}</a>
+                                {% endif %}
+
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                    {# end of list of entries #}
+
+                    {# subsequent entries button #}
+                    {% if subsequent_entries_count > 0 %}
+                        {% blocktrans asvar subsq count subsequent_count=subsequent_entries_count %}{{ subsequent_count }} more entry{% plural %}{{ subsequent_count }} more entries{% endblocktrans %}
+                        <a title="{% trans "show all" %}" href="{% if entry_permalink %}{{ topic.get_absolute_url }}{% endif %}?page={{ subsequent_entries_page }}" class="more-entries-button">{{ subsq }}</a>
+                    {% endif %}
+                    {# end of subsequent entries button #}
+
+
+                {% else %}
+                    {# Topic does exist but has no entries #}
+                    <p>{% trans "no such thing known to humankind." %}</p>
+
+                    {% if not banned %}
+                        {% include "dictionary/includes/forms/wish.html" %}
+                    {% endif %}
+                {% endif %}
+
+            {% else %}
+                {# Topic does not exist #}
+                <header class="entry_header">
+                    <h1 class="topic-title"><a href="{% url 'topic-search' %}?q={{ topic.title }}">{{ topic.title }}</a></h1>
+                </header>
+
+                <p>{% trans "no such thing known to humankind." %}</p>
+
+                {% if not valid %}
+                    <p>{% trans "curses to such a topic anyway." %}</p>
+                {% else %}
+                    {% include "dictionary/includes/forms/wish.html" %}
+                {% endif %}
+
+            {% endif %}
+
+    </section>
+
+    {# add entry form & user related modal import #}
+    {% if user.is_authenticated %}
+
+        {% include "dictionary/includes/send_message_modal.html" %}
+        {% include "dictionary/includes/block_user_modal.html" %}
+        {% if not banned and valid %}
+            {% if drafts.exists %}
+                <div class="border rounded p-3 bg-light my-3">
+                    <div class="d-flex" role="alert">
+                        <svg class="mr-2" width="21" height="21" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#saved"></use>
+                        </svg>
+
+                        {% url "topic_list" slug="drafts" as drafts_url %}
+                        {% blocktrans trimmed with drafts_attr='data-lf-slug="drafts"' title=topic.title %}
+                            <span>you have <a {{ drafts_attr }} href="{{ drafts_url }}">drafted</a> entries belonging to <strong>{{ title }}</strong>:</span>
+                        {% endblocktrans %}
+                    </div>
+
+                    <ul class="list-unstyled mt-2 mb-0">
+                        {% for draft in drafts %}
+                            <li><a href="{% url "entry_update" pk=draft.pk %}">#{{ draft.pk }} ({{ draft.content|truncatechars:80 }}) ({{ draft.date_created|entrydate:draft.date_edited }})</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <section class="user-content mt-4">
+                {% if not user.is_novice %}
+                    <form method="post" action="{% url 'image-upload' %}" class="dropzone" id="user-image-upload" style="display: none">{% csrf_token %}</form>
+                {% endif %}
+                <section class="user-comments">
+                    {% include "dictionary/includes/editor_buttons.html" %}
+                    {% load widget_tweaks %}
+
+                    <form method="post" id="content-form">
+                        {% csrf_token %}
+                        {% autoescape off %}
+                            {# Notice: This string gets escaped in render_field! #}
+                            {% blocktrans asvar text_placeholder with title=topic.title %}express your thoughts on {{ title }}..{% endblocktrans %}
+                        {% endautoescape %}
+                        {% trans "Entry content area" as area_label %}
+                        {% render_field form.content placeholder=text_placeholder id="user_content_edit" class="entry_editor form-control allowsave expandable" rows="5" spellcheck="true" aria-label=area_label %}
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <button type="button" class="btn draft-async px-0" data-title="{{ topic.title }}">{% trans "keep this as draft" %}</button>
+                            </div>
+                            <button type="submit" class="btn btn-django-link"{% if user.is_suspended %} title="{% trans "you lack the required permissions." %}" disabled{% endif %}>{% trans "publish" %}</button>
+                        </div>
+                    </form>
+                </section>
+            </section>
+        {% endif %}
+    {% endif %}
+    {# end of add entry form & user related modal import #}
+
+    {% endwith %}
+{% endblock %}
+
+
+{% block rightframe %}
+    {% if topic.exists %}
+        {% with categories=topic.category.all %}
+            {% if categories or perms.dictionary.can_suggest_categories %}
+                <section class="topic-categories-list">
+                    <h2>{% trans "belonging channels" %}</h2>
+                    {% if categories %}
+                        <ul>
+                            {% for category in categories %}
+                                <li>
+                                    {% if category.is_pseudo %}
+                                        <a href="{% url 'topic-search' %}?q=%23{{ category.name }}">#{{ category.name }}</a>
+                                    {% else %}
+                                        <a data-lf-slug="{{ category.slug }}" title="{{ category.description }}" href="{{ category.get_absolute_url }}">#{{ category.name }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span>{% trans "this topic is yet to be classified" %}</span>
+                    {% endif %}
+
+                    {% if not user.is_novice and perms.dictionary.can_suggest_categories and topic.allow_suggestions %}
+                        <div class="dropdown mt-2">
+                            <a role="button" tabindex="0" id="suggestDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "suggest channels" %}</a>
+                            <div class="dropdown-menu no-collapse no-arrows tinybar" data-orientation="bottom-start" aria-labelledby="suggestDrop" style="max-height: 400px; overflow-y: scroll">
+                                <ul class="list-group pl-3 pr-2" style="min-width: 200px;">
+                                    {% get_topic_suggestions user topic as categories_with_suggestions %}
+                                    {% for category in categories_with_suggestions %}
+                                        <li class="py-2 d-flex justify-content-between">
+                                            {% if not category.is_pseudo %}
+                                                <a data-lf-slug="{{ category.slug }}" title="{{ category.description }}" href="{{ category.get_absolute_url }}">#{{ category.name }}</a>
+                                            {% else %}
+                                                <a href="{% url 'topic-search' %}?q=%23{{ category.name }}">#{{ category.name }}</a>
+                                            {% endif %}
+                                            <div class="suggestion-vote" style="min-width: 55px;" data-topic="{{ topic.slug }}" data-category="{{ category.slug }}">
+                                                <button type="button" class="btn btn-sm up{{ category.up|yesno:" btn-django-link," }}">
+                                                    <svg fill="currentColor" width="10" height="10" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                                                        <use href="#up"></use>
+                                                        <title>{% trans "suggest" %}</title>
+                                                    </svg>
+                                                </button>
+                                                <button type="button" class="btn btn-sm{{ category.down|yesno:" btn-django-link," }}">
+                                                    <svg fill="currentColor" width="10" height="10" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                                                        <use href="#down"></use>
+                                                        <title>{% trans "put down" %}</title>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                </section>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+{% endblock %}

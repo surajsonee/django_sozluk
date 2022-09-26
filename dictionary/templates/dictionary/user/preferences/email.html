@@ -1,0 +1,56 @@
+{% extends "dictionary/user/preferences/index.html" %}
+{% load widget_tweaks i18n %}
+{% block title %}{% trans "change e-mail" context "titleblock" %}{% endblock %}
+
+{% block content_preferences %}
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert-danger p-3 mb-3 rounded" role="alert">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="border rounded p-3 bg-light mb-3">
+        <strong style="font-weight: 600; margin-right: .35em;">{% trans "current e-mail in use:" %}</strong>
+        <span>{{ user.email }}</span>
+    </div>
+
+    {% if not user.email_confirmed %}
+        <div class="alert-info p-3 mb-3 rounded" role="alert">
+        {% blocktrans trimmed %}
+            a confirmation link has been sent to your new e-mail address. by following
+            this link you can complete your e-mail change. if you didn't receive any mails,
+            you can fill the form below again.
+        {% endblocktrans %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        <div class="form-group">
+            <label for="email_1"><strong>{{ form.email1.label }}</strong></label>
+            {% render_field form.email1 id="email_1" class="form-control" %}
+
+            {% for err in form.email1.errors %}
+                <p class="text-danger">{{ err }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="email_2"><strong>{{ form.email2.label }}</strong></label>
+            {% render_field form.email2 id="email_2" class="form-control" %}
+
+            {% for err in form.email1.errors %}
+                <p class="text-danger">{{ err }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="password_confirm"><strong>{{ form.password_confirm.label }}</strong></label>
+            {% render_field form.password_confirm id="password_confirm" class="form-control" %}
+        </div>
+        {% csrf_token %}
+
+        <small class="fs-90">{% trans "a confirmation link will be sent to the new e-mail address." %}</small>
+        <button class="btn btn-django stretch mt-3">{% trans "change e-mail" %}</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "dictionary/base.html" %}
+{% load widget_tweaks i18n %}
+
+{% block title %}{% trans "resend e-mail confirmation" context "titleblock" %}{% endblock %}
+{% block content %}
+    <h1 class="h4 mb-3">
+        <strong><a href="{% url 'login' %}">{% trans "log in" %}</a> &raquo; {% trans "resend e-mail confirmation" context "titleblock" %}</strong></h1>
+
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="alert-danger p-3 mb-3 rounded" role="alert">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        <div class="form-group">
+            <label for="emailForResend">{{ form.email.label }}</label>
+            {% render_field form.email class="form-control" id="emailForResend" %}
+            {% for error in form.email.errors %}
+                <p class="text-danger">{{ error|escape }}</p>
+            {% endfor %}
+        </div>
+
+        {% csrf_token %}
+        <button class="btn btn-django stretch">{% trans "send it again please" %}</button>
+    </form>
+{% endblock %}

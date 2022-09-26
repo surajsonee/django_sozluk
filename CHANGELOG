@@ -1,0 +1,3581 @@
+[1.1.5](2022.02.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Upgrade Python to 3.8.12, upgrade Python
+dependencies to latest versions.
+2) In development docker setup, fixed a configuration
+error that caused celery to not have access to media files.
+
+--Deletions--
+None
+
+[1.1.4-beta](2022.01.05)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Entries are no longer ordered by their
+creation date in home page (this was
+unintentional).
+2) Fixed a trivial error where parsing
+empty user agents would result in a crash.
+
+--Deletions--
+None
+
+[1.1.3-beta](2021.09.26)(compatible)
+
+--Additions--
+1) A docker setup for production is now ready.
+2) A small Python helper script is now available
+to run docker containers, both production and
+development setups. Use python docker.py --help to
+learn about how it works.
+
+-- Changes --
+1) Fix icons cutting of on icon assisted menus
+in Safari.
+2) Fix some dropdown icons blocking the click
+action (i.e., block in entry actions) in related context.
+3) Fix smart_lower not detecting Turkish language properly
+& issue with 0x130 (İ) character (discovery thanks to entries
+by ksbgvn on demo website).
+4) Python packages are updated to latest versions.
+5) Author full name on entry replies are now lowercase.
+6) If no alias is provided in the "insert link" pop-up
+the link will appear in the editor instead of vanishing.
+
+--Deletions--
+None
+
+[1.1.2-beta](2021.07.18)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Various database queries have been
+optimized.
+2) Slight changes were made in admin image
+list to increase accessibility.
+3) Django upgraded to 3.2.5
+
+--Deletions--
+None
+
+[1.1.1-beta](2021.06.05)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed Turkish translation. Compiled
+translation files are now included in the repo.
+2) Fixed a minor frontend issue that caused redundant
+margin to appear at the end of the page.
+3) Sitemap links now respect the protocol set
+in settings (apps.py). Thanks to Fatih Toptaş.
+4) Entries larger than 8191 characters would
+result in a crash, fixed that by removing
+redundant index on entry_content. You need
+to run makemigrations+migrate for your app,
+it will be resolved automatically.
+Thanks to Fatih Toptaş.
+5) Fixed incorrect ordering behavior in advanced
+search. Thanks to Aras Diler.
+6) Updated Django to latest version.
+7) DEPRECATED support for database backends
+other than PostgreSQL, please switch to
+PostgreSQL as soon as possible to continue
+getting updates for django-sozluk.
+
+--Deletions--
+None
+
+[1.1-beta](2021.04.13)(**incompatible)
+--Additions--
+1) Added a Docker setup for production.
+2) Entry action "share" was added for supported devices.
+3) Mobile views now include a bottom navigation menu, replacing
+top right user controls.
+4) A standalone entry creation page was added.
+
+-- Changes --
+1) create_generic_user management command can
+now be used in debug mode & allows --no-input
+parameter to bypass confirmation inputs.
+2) The number of toasts that can be displayed
+at a time is now limited to 5.
+3) A bunch of text based database fields such as CharField
+or TextField had their 'null=True' removed. This is
+**incompatible**. You need to substitute these fields
+with empty strings "", this can be done while migrating
+as Django will ask you to take action for each changed field.
+4) Some 'reverse_lazy' functions were appropriately
+converted to 'reverse'.
+5) CSRF failure view now shows a plain 403 Forbidden message
+rather than Django's default 403 template.
+6) Fixed a bug which allowed publishing of drafts entries
+to banned topics.
+7) In admin panel, some fields are now editable right away
+in the list view.
+8) Django version is upgraded to 3.2
+9) Backup files are now served with nginx.
+10) A bunch of changes are made to improve UI & increase
+accessibility.
+11) A bunch of QuerySet's are changed to improve
+performance.
+12) Upgraded dependencies to latest versions.
+13) Optimized Turkish translation.
+
+--Deletions--
+None
+
+[1.0.5-beta](2021.02.03)(compatible)
+--Additions--
+1) It is now possible to embed tweets
+in topic media.
+
+-- Changes --
+1) Optimized codebase for admin's user
+suspension related views. Liberated the
+time choices for suspension times. Also
+changed the UI a bit.
+2) Reduced complexity in some files
+by removing/rearranging redundant blocks.
+3) In left frame desktop, the next page
+button will not be rendered when there is none.
+4) Overhauled dropdown menu designs,
+many with brand new icons.
+6) TopicEntryList changes:
+    a) searching with user handle will also
+    yield results that contain mentions of
+    the user, instead of just showing the
+    entries of that user.
+
+    b) Search and history modes will redirect
+    to the topic itself when given invalid queries.
+
+    c) A user-induced overflow error in following
+    mode will now fail silently (instead of 500).
+
+    d) Improved responsiveness of the header section
+    of the template.
+
+    e) Fixed a breaking bug related to pagination;
+    authenticated users would possibly get the 404
+    page instead of the topic, when they used the
+    links from search engines.
+
+7) Updated Django to 3.1.6, graphene-django to 2.15.0
+and Pillow to 8.1.0
+
+--Deletions--
+None
+
+[1.0.4-beta](2021.01.13)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed a breaking bug which
+caused loss of newly published
+entries in concurrent contexts.
+Thanks to Aras Diler for the report.
+
+--Deletions--
+None
+
+[1.0.3-beta](2021.01.09)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) In the blocked list view, the behaviour of
+"remove block" button is changed. It now
+toggles between block states, just like
+the follow button in following list.
+2) Session timeouts are changed:
+----------------------------------------
+Old         New         Remember me?
+2 hours     1 day       No
+2 weeks     30 days     Yes
+----------------------------------------
+3) Context: In mobile, the left frame is not
+loaded as users are expected to use
+the standalone topic list view instead.
+
+As a result, left frame would show an error
+message when switched to landscape mode in
+mobile where the viewport is wider. Instead
+of this behaviour, the left frame is now
+hidden and the content is expanded, just
+like in vertical view.
+
+4) Various redundant/excessive spacing is
+removed from some templates.
+5) Add related Turkish translation strings.
+6) Django version updated to 3.1.5 from 3.1.3
+
+Thanks to Aras Diler for various suggestions.
+--Deletions--
+None
+
+[1.0.2-beta](2020.11.12)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Add stop condition for recursive
+method in LeftFrameProcessor. In
+current implementation, there is no
+known way to cause recursion error
+but future implementations may cause
+this error, leading to a breaking
+error. This will make bug detection
+process easier in such a case.
+2) Content skipper will no longer
+appear in print mode.
+3) Fix some minor Turkish strings.
+
+--Deletions--
+None
+
+[1.0.1-beta](2020.11.02)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Upgrade Django version to 3.1.3 from
+3.1.2, this fixes some layout issues
+in admin pages (you may need to clear
+your browser cache).
+2) TopicListHandler's delete_cache and
+refresh_count methods caused unnecessary
+hits to cache server, fixed that.
+3) Header categories now respond the
+changes made in admin page immediately
+(the previous versions required clearing
+cache using the utility provided in admin).
+4) Django-specific model methods are now
+ordered properly as described in Django
+documentation.
+
+--Deletions--
+None
+
+[0.17.17-alpha](2020.10.23)(compatible) --- released as 1.0.0-beta
+--Additions--
+None
+
+-- Changes --
+1) Adjusted some errors messages
+in Graph api and reduced complexity
+in TopicListHandler.
+
+--Deletions--
+None
+
+[0.17.16-alpha](2020.10.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Add missing slashes in some
+url configurations.
+2) Add missing Turkish strings.
+
+--Deletions--
+None
+
+[0.17.15-alpha](2020.10.17)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) DISABLE_ANONYMOUS_VOTING setting
+now cannot be tracked by the users.
+
+--Deletions--
+None
+
+[0.17.14-alpha](2020.10.17)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed a regression in autocomplete
+behaviour which hindered searches with
+@handle.
+2) Improved the performance of novice
+queue determination logic.
+
+--Deletions--
+1) Removed unused latest_entry_date
+method of Topic.
+
+[0.17.13-alpha](2020.10.15)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Updated javascript libraries to
+latest versions (@popperjs/core
+and js-cookie).
+
+--Deletions--
+None
+
+[0.17.12-alpha](2020.10.14)(compatible)
+--Additions--
+1) Add client-side caching for all
+autocomplete inputs.
+
+-- Changes --
+1) Updated autocomplete library to
+latest version.
+
+--Deletions--
+None
+
+[0.17.11-alpha](2020.10.11)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Topic "objects_published" manager now uses
+Exists (as it should have been).
+2) Optimized TopicMove "get_queryset" method.
+
+--Deletions--
+None
+
+[0.17.10-alpha](2020.10.11)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Use new Django 3 syntax in
+TopicEntryList "answered" method.
+2) Fixed the ancient TopicEntryList
+_find_subsequent_page method.
+3) Remove redundant raise statement
+in LeftFrameProcessor.
+
+--Deletions--
+None
+
+[0.17.9-alpha](2020.10.10)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) In topic channel list, pseudo channels
+were listed alike real channels, fixed that.
+2) Fixed user settings hamburger menu not
+rendering properly when viewport size gets changed.
+3) Updated readme & docs.
+
+--Deletions--
+None
+
+[0.17.8-alpha](2020.10.09)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed pagination selectors not working
+properly in iOS Safari (Thanks to Aras Diler).
+
+--Deletions--
+None
+
+[0.17.7-alpha](2020.10.07)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Some minor performance improvements.
+
+--Deletions--
+None
+
+[0.17.6-alpha](2020.10.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Improved performance for archiving feature.
+2) Bunch of minor improvements in performance
+in graph mutations/queries.
+3) Fixed a bug which allowed draft entries
+to be pinned.
+
+--Deletions--
+None
+
+[0.17.5-alpha](2020.10.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) In profile page, the promoted entry
+is now randomly selected from the top 50
+entries of the user; formerly it would
+show the best entry only.
+2) Generic superuser caller (get_generic_superuser)
+is now cached.
+3) Dropped os.path in favor of pathlib.Path in
+settings.py
+
+--Deletions--
+None
+
+[0.17.4-alpha](2020.10.05)(compatible)
+--Additions--
+1) Add helpful message for
+broken/deleted user uploaded images.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.17.3-alpha](2020.10.04)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Add hamburger menu instead of tabs
+in mobile user settings page.
+
+--Deletions--
+None
+
+[0.17.2-alpha](2020.10.03)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Project relicensed under BSD-3 Clause.
+
+--Deletions--
+None
+
+[0.17.1-alpha](2020.10.03)(compatible)
+--Additions--
+1) Add Wish model to admin panel.
+
+-- Changes --
+1) Optimized overall admin page experience
+by adding new filters, search fields
+etc.
+
+--Deletions--
+None
+
+[0.17.0-alpha](2020.10.02)(incompatible)
+--Additions--
+1) Add the case of ValueError (possible, but
+not likely) in BackupDownload view.
+
+-- Changes --
+1) Changed wish backend for better API.
+**incompatible**: this is a bit tricky:
+
+If you want to preserve previous data,
+take a backup of dictionary_topic_wishes
+table.
+
+You need to run makemigrations+migrate
+for dictionary app, when prompted with
+the question, you need to provide a
+temporary topic ID that will hold ALL the
+previous wishes. Then:
+
+a) If you want to preserve previous data,
+use data from dictionary_topic_wishes to match
+topics with wishes. You can do this by hand one
+by one, or preferably write a script that will
+do it for you.
+
+b) If you don't really care about the previous
+data, just empty dictionary_wish table.
+
+--Deletions--
+None
+
+[0.16.1-alpha](2020.10.01)(compatible)
+--Additions--
+1) Add admin interface for topic
+suggestions.
+
+-- Changes --
+1) Upgrade django to 3.1.2 from 3.1.1
+
+--Deletions--
+None
+
+[0.16.0-alpha](2020.10.01)(incompatible)
+--Additions--
+1) Add backup feature; users now can take
+their content as a JSON file. **incompatible**
+run makemigrations+migrate for dictionary app.
+2) Add media files deployment notice
+in docs.
+
+-- Changes --
+1) Improved performance for archiving
+conversations.
+
+--Deletions--
+None
+
+[0.15.2-alpha](2020.09.29)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Use enumeration types for fields
+with choices.
+
+--Deletions--
+None
+
+[0.15.1-alpha](2020.09.28)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) In image upload, compressing images would
+not preserve the intended orientation, fixed that.
+(Reported by Aras Diler)
+
+--Deletions--
+None
+
+[0.15.0-alpha](2020.09.27)(incompatible)
+--Additions--
+None
+
+-- Changes --
+1) Upgrade Django from 2.2.16 to 3.1.1
+**incompatible** You need to upgrade to Django
+3.1, Django 2.2.x and 3.0.x are incompatible.
+You also need to apply migrations. (due to increased
+max char size in the first and last name of User model
+in Django 3.1)
+
+2) Changed some deprecated apis.
+3) Admin templates are now located in
+templates directory (formerly templates/dictionary)
+4) Removed index.html admin template and used app_list.html
+instead (to support Django 3 changes).
+5) django.contrib.admin is now located under the dictionary
+in INSTALLED_APPS due to template overriding.
+
+--Deletions--
+None
+
+[0.14.7-alpha](2020.09.27)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) When the number of entries dropped
+below 10, novices wouldn't be kicked out
+of the novice list, fixed that.
+2) Fixed incorrect argument for date_created
+field of Conversation. (run makemigrations+migrate
+for dictionary)
+3) Reduced entry deletion karma penalty by 1.
+
+--Deletions--
+None
+
+[0.14.6-alpha](2020.09.26)(compatible)
+--Additions--
+1) Add filtering by media in Topic
+admin page.
+
+-- Changes --
+1) Code style changes in both
+javascript and python.
+2) Some minor UI adjustments.
+
+--Deletions--
+None
+
+[0.14.5-alpha](2020.09.24)(compatible)
+--Additions--
+1) Flair "assorter" is now visible
+for authors who have the permission
+to suggest categories for topics.
+2) Add template tag has_perm to
+check permissions for given user
+instance.
+3) Add non-db category "ama" to
+list Topics with is_ama=True.
+4) Add helpful exception message for
+unimplemented non-db categories.
+
+-- Changes --
+1) Images are now stored in "images"
+sub folder (below media folder).
+2) Users with "view_image" permission
+now can browse images even if they are
+marked for deletion.
+
+--Deletions--
+None
+
+[0.14.4-alpha](2020.09.23)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Use usercache decorator for
+unread_topic_count method in Author.
+2) Fix ImageDetailProduction mime type
+and url definition.
+3) Entries now required to have vote rate
+bigger than 0 in order to show up in top
+entries.
+4) Add cache for calculating all nice
+entries in Index view. Also add some comments
+along with page_timeout and nice_cache_timeout
+properties.
+
+--Deletions--
+None
+
+[0.14.3-alpha](2020.09.21)(compatible)
+--Additions--
+1) Add button in topic header that skips
+to entry content area for improved accessibility.
+2) In mobile, add button before footer that scrolls
+to top of the page for improved accessibility.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.14.2-alpha](2020.09.21)(compatible)
+--Additions--
+1) Add isTouchDevice check in javascript.
+
+-- Changes --
+1) Fixed the issue in editors caused by iPhone
+devices using Apple smart quotes.
+2) Swh references are now fully rendered in
+touch devices.
+3) In touch devices, entry actions now have
+copy link button.
+
+--Deletions--
+None
+
+[0.14.1-alpha](2020.09.18)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed create_generic_user raising false
+error message.
+
+--Deletions--
+1) Removed topic suggestions (aka: did you mean?)
+feature due to bad implementation/unacceptable
+performance.
+
+[0.14.0-alpha](2020.09.18)(incompatible)
+--Additions--
+1) Add some database indices for improved lookups.
+**incompatible** run makemigrations+migrate for
+dictionary app.
+
+-- Changes --
+1) Improved performance for left frame queries.
+
+--Deletions--
+None
+
+[0.13.0-alpha](2020.09.18)(incompatible)
+--Additions--
+1) Added option for users to enable/disable
+site announcements in activity. **incompatible**
+run makemigrations+migrate for dictionary app.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.12.11-alpha](2020.09.17)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Removed dictionary.utils.settings module
+and moved settings to to dictionary.apps for
+improved code readability.
+2) Converted relative imports to absolute
+import for improved code readability.
+
+--Deletions--
+None
+
+[0.12.10-alpha](2020.09.17)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Paginator (template) selector values are
+now evaluated lazily, this should improve
+performance for large topics.
+2) Fixed autocomplete library highlighting
+behaviour.
+3) Fixed cancel button behaviour for link
+tag when used with text selection.
+4) Add aria-expanded property to image button
+for improved accessibility.
+
+--Deletions--
+None
+
+[0.12.9-alpha](2020.09.16)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) In profile page, entry count stats are now
+cached. Latest entries (paginator) also makes
+use of this. This should improve performance
+dramatically.
+2) Add badge "zealous" for authors with entry
+count >= 1000.
+3) Improved query for wish listing in TopicEntryList.
+
+--Deletions--
+None
+
+[0.12.8-alpha](2020.09.13)(compatible)
+--Additions--
+1) Add utility function flush_all_sessions
+for session backends. Check docstring.
+
+-- Changes --
+1) Optimized some database queries.
+2) Following topic notification is
+now cached for 60 seconds.
+3) Add backend for cached sessions,
+also changed folder structure of
+backends.
+4) Fix unnecessary cache hit in
+TopicListHandler.
+
+--Deletions--
+None
+
+[0.12.7-alpha](2020.09.12)(compatible)
+--Additions--
+1) None
+
+-- Changes --
+1) Removed debugging fields from admin.
+Improved admin pages for end users and
+add some missing translation strings.
+
+--Deletions--
+None
+
+[0.12.6-alpha](2020.09.11)(compatible)
+--Additions--
+1) Add redirect by reference feature.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.12.5-alpha](2020.09.10)(compatible)
+--Additions--
+1) Add custom templates for error pages
+(500 server error and 404 not found).
+Notice: Only available with DEBUG=False.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.12.4-alpha](2020.09.10)(compatible)
+--Additions--
+1) Add some meta tags to improve seo.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.12.3-alpha](2020.09.07)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fix toast animation in Firefox.
+2) Search tag now works properly in preview.
+3) In topic entry list pagination is now also
+available at the bottom of the page.
+
+--Deletions--
+None
+
+[0.12.2-alpha](2020.09.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Editor buttons (excluding link/image tags)
+now prompt in a modal window with autocomplete
+enhanced input.
+2) Package ups:
+    Django 2.2.15 -> 2.2.16
+    graphene-django 2.12.1 -> 2.13.0
+    user-agents 2.1 -> 2.2.0
+
+--Deletions--
+None
+
+[0.12.1-alpha](2020.09.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Renamed main.min.js to index.js.
+2) Right frame is now sticky.
+3) Some other minor UI optimizations.
+
+--Deletions--
+None
+
+[0.12.0-alpha](2020.09.05)(incompatible)
+--Additions--
+1) Add some throttling mechanisms for
+entry sending, report sending, and
+unauthenticated voting.
+2) Add field date_created to conversation.
+**incompatible** run makemigrations+migrate
+for dictionary, provide timezone.now as the
+default value.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.11.6-alpha](2020.09.04)(compatible)
+--Additions--
+1) Add a screenshot with dark mode enabled.
+
+-- Changes --
+1) Fixed autocomplete cursor.
+2) Fixed a typo.
+
+--Deletions--
+1) Removed deprecated commands.
+
+[0.11.5-alpha](2020.09.03)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Modals now return to last focused element
+when they are closed.
+2) Escape key wouldn't hide the modals due
+to a regression introduced in the previous update,
+fixed that.
+3) In people list, unblock buttons wouldn't work
+properly, fixed that.
+
+--Deletions--
+None
+
+[0.11.4-alpha](2020.09.03)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Optimized dropdown library.
+
+--Deletions--
+None
+
+[0.11.3-alpha](2020.09.03)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Themes now respect user's preference
+when logging in or out.
+2) Fixed an error in autocomplete behaviour.
+3) Minor changes to some frontend logic.
+4) Birth date widgets were missing labels for screen
+readers, fixed that.
+5) Add documentation on compiling javascript files.
+
+--Deletions--
+None
+
+[0.11.2-alpha](2020.09.02)(compatible)
+--Additions--
+1) Individual messages can now be deleted. Users
+may also delete a message immediately (this can be specified
+in MESSAGE_PURGE_THRESHOLD setting) to hide the message
+content from the recipient.
+2) Add editor buttons in conversation view.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.11.1-alpha](2020.09.01)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Improved/optimized autocomplete library.
+2) The search input in entry list search dropdown
+now autocompletes for author names.
+3) User will be redirected to advanced search page when
+they search with empty input in header search.
+4) Exclusion preferences now won't flush on
+browser close.
+
+--Deletions--
+None
+
+[0.11.0-alpha](2020.08.31)(incompatible)
+--Additions--
+1) Add dark mode feature. **incompatible**
+run makemigrations+migrate for dictionary app.
+
+-- Changes --
+1) Minor UI optimizations.
+2) Fixed a possible error with 'see' tag.
+3) Appended dropzone css files into helpers.
+
+--Deletions--
+None
+
+[0.10.2-alpha](2020.08.30)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed header behaviour in iOS Safari.
+2) Exclusion button was not working
+properly, fixed that.
+3) Fixed an issue with accessibility.
+4) Add docs about translation.
+
+--Deletions--
+None
+
+[0.10.1-alpha](2020.08.29)(compatible)
+--Additions--
+1) Add LANGUAGE_COOKIE_AGE to prevent the loss of language
+preference when users close the browser.
+
+-- Changes --
+1) Fixed some minor UI issues.
+2) Reduced javascript bundle size.
+3) Fixed a major XSS vulnerability, caused
+by 'swh' tag, in mobile views.
+4) Fixed an issue which caused faulty
+representation of textarea placeholders.
+5) When clicked, pseudo categories now redirect
+to related topic instead of giving an error (in topic
+suggestion list).
+6) Fixed an issue which caused the site to crash
+when unauthenticated users visited the favorite authors
+of an user.
+7) In favorite authors list, removed "self-follow" button.
+8) Hash char (#), is now a valid char in topic titles.
+9) Editor:
+    1) Single quote (') char will now work with tags.
+    2) Fixed a possible error in linkifying behaviour.
+    3) Tags with links encode to valid URI.
+
+--Deletions--
+None
+
+[0.10.0-alpha](2020.08.28)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Split javascript logic into multiple
+files.
+
+--Deletions--
+None
+
+[0.9.0-alpha](2020.08.26)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Removed jQuery. Converted all core frontend logic
+into native javascript.
+
+--Deletions--
+None
+
+[0.8.0-alpha](2020.08.23)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Removed jQuery dependant autocomplete
+library & rewrote it in native js. Next up:
+
+1) Remove jQuery.
+2) Split javascript into multiple files,
+and use a bundler.
+
+--Deletions--
+None
+
+[0.7.1-alpha](2020.08.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed PeopleList view.
+
+--Deletions--
+None
+
+[0.7.0-alpha](2020.08.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Dropped Bootstrap JS and rewrote all
+dependant API in helpers.js (this file will be
+merged into djdict.js later). With this change
+bootstrap library is now completely discarded.
+
+Notice: This update breaks people list page,
+this will be fixed in a subsequent update.
+
+--Deletions--
+1) Some unused CSS rules.
+
+[0.6.0-alpha](2020.08.16)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Dropped Bootstrap CSS. Added helpers.css
+which uses some styling utilities from Bootstrap.
+
+--Deletions--
+None
+
+[0.5.0-alpha](2020.08.13)(compatible)
+--Additions--
+1) This project now uses Celery and
+django-celery-email to handle
+periodic tasks and to send e-mails
+asynchronously. Management commands
+that previously required cron are deprecated.
+
+-- Changes --
+1) Django version up 2.2.15 from 2.2.14.
+
+--Deletions--
+None
+
+[0.4.0-alpha](2020.08.09)(incompatible)
+--Additions--
+1) Added setting for users to disable
+uncategorized topics in today.
+**incompatible** run makemigrations+migrate
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.3.4-alpha](2020.08.09)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Optimized javascript code for editor
+buttons.
+
+--Deletions--
+None
+
+[0.3.3-alpha](2020.08.08)(compatible)
+--Additions--
+1) Added new utility tag firstofany, behaves
+like firstof but works on all objects.
+
+-- Changes --
+1) Left frame:
+    a) Fixed a regression (from 0.2.0-alpha) which
+    caused left frame to not render in flat pages.
+    b) LeftFrameProcessor is now lazier than ever,
+    added lx_proxy to initialize the whole object lazily.
+2) Fixed a UI issue about birth date selector.
+
+--Deletions--
+None
+
+[0.3.2-alpha](2020.08.08)(compatible)
+--Additions--
+1) Add is_hidden property to Author, includes
+users that are supposed to be hidden.
+
+-- Changes --
+1) Revamped following/blocked page.
+2) Hidden users now can't be
+(un)followed.
+
+--Deletions--
+None
+
+[0.3.1-alpha](2020.08.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Links in user contents are now
+case sensitive.
+2) When users saved a draft but published
+entries without saving the latest changes, the
+changes would be discarded, fixed that.
+
+--Deletions--
+None
+
+[0.3.0-alpha](2020.08.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Removed spaceless tag, if you see inconsistent/bad
+spacing (compared to previous versions) between
+elements after this update, please report. + Optimized UI.
+2) Fixed preview for drafts.
+3) Moved all image settings to utils/settings.py
+
+--Deletions--
+None
+
+[0.2.0-alpha](2020.08.05)(incompatible)
+--Additions--
+1) Category now has 2 more fields: is_pseudo and is_default.
+More description available about these fields in help texts.
+(**incompatible** run makemigrations+migrate for dictionary)
+
+-- Changes --
+1) Left frame:
+    a) Related cookies are now encoded.
+    b) Renamed related cookie keys.
+    c) A new middleware was added to serve
+    the left frame, replacing the context processor
+    (done so as to manipulate cookies).
+    d) In mobile, popular exclusions are now handled via
+    cookies.
+    e) Fixed a possible crash related to json decode error.
+    f) Added a new setting DEFAULT_EXCLUSIONS. Will be
+    used as default exclusions when users first visit.
+    g) Some of the invalid cookie values will be
+    removed/reset upon new requests.
+    h) Once again, fixed the date mismatch caused by
+    "popular" and "today in history".
+    j) For today in history, default year will now be the
+    first item of YEAR_RANGE instead of hard-coded 2020.
+    g) There is now a visual hint to indicate if category
+    exclusions are active.
+
+2) In formatted texts, aliased links wouldn't work when there
+were multiple links in one line, fixed that. Also removed the
+requirement of 2 characters for aliases.
+
+--Deletions--
+None
+
+[0.1.0-alpha](2020.08.03)(incompatible)
+--Additions--
+1) Added category suggestion feature.
+**incompatible** run makemigrations+migrate
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.0.0-alpha](2020.08.02)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed a bug which caused "today in history"
+and "top" to be out of sync (thanks to Aras Diler).
+2) Fixed some translation problems and translated
+latest feature into Turkish.
+3) Entries with comments are now cannot be deleted,
+if users decide delete such entries, they will lose
+the authorship of that entry (entry will be marked anonymous).
+4) Fixed some UI issues.
+5) When users send entries, the 'forbidden characters' error
+will now be given instantly.
+6) Moved slug_identifier to LeftFrame (from TopicListHandler).
+
+--Deletions--
+None
+
+[0.187.0-dev-pre](2020.08.02)(compatible)
+--Additions--
+1) Add validator validate_topic_title.
+(run makemigrations+migrate for dictionary)
+
+-- Changes --
+1) Overhauled draft saving system. Users now
+can save drafts asynchronously by using the new save
+button instead of checkbox style synchronous save.
+Saving a draft will also show a preview. Ctrl + S
+shortcut is also available.
+2) Deleting draft entries will no longer cause
+karma deduction (this was unintentional).
+
+--Deletions--
+None
+
+[0.186.0-dev-pre](2020.08.01)(compatible)
+--Additions--
+1) None
+
+-- Changes --
+1) Images can now be used in these contexts:
+-Announcements
+-Messages
+-Wishes
+-Comments
+-Flat pages
+and Pinned entries.
+
+--Deletions--
+None
+
+[0.185.0-dev-pre](2020.08.01)(compatible)
+--Additions--
+1) Added images mode for entry list.
+
+-- Changes --
+1) Fixed some minor ui issues.
+2) In messages, the initial number of messages
+shown are increased to 10.
+3) Fixed social media buttons' behaviour for
+Safari.
+4) Users with add_image permission can now
+add unlimited amount of images.
+5) Fixed topic entry list search behaviour
+for Postgresql.
+
+--Deletions--
+None
+
+[0.184.0-dev-pre](2020.07.31)(incompatible)
+--Additions--
+1) Added images feature (along with some dependencies).
+**incompatible** run makemigrations+migrate for dictionary.
+
+-- Changes --
+1) Fixed an issue with the reference tag.
+
+--Deletions--
+None
+
+[0.183.0-dev-pre](2020.07.25)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) This subject is now subject to
+internalization/localization.
+This commit will include some minor
+string wrapping, there will be several
+upcoming updates as such (which I don't think of
+logging changes).
+
+Due to this support, I will be replacing all
+Turkish strings with English in all code files
+and templates, which will make the code a lot
+readable by foreign friends.
+
+This commit also includes some minor changes
+(there were some code typos, etc.). Check them
+also out.
+
+--Deletions--
+None
+
+[0.182.0-dev-pre](2020.07.24)(compatible)
+--Additions--
+1) When you search for keywords in entry
+list, keywords will be marked in entry
+content. Also implemented PosgreSQL
+search lookup.
+
+-- Changes --
+1) Body footer is now visible in all
+pages.
+
+--Deletions--
+1) Cast old implementation of body
+classes into the fire.
+
+[0.181.0-dev-pre](2020.07.24)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Minor ui optimizations.
+
+--Deletions--
+None
+
+[0.180.0-dev-pre](2020.07.23)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed the problems with 'read more' and
+'pin entry' buttons in index page.
+2) Optimized some html semantics, also fixed
+non-unique ID problem with voting selectors.
+
+--Deletions--
+None
+
+[0.179.0-dev-pre](2020.07.23)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Javascript:
+    a) Autocomplete elements now append to
+    proper parents.
+    b) Use function declarations instead of
+    function expressions.
+    c) IIFE'd djdict.js.
+
+--Deletions--
+None
+
+[0.178.0-dev-pre](2020.07.23)(compatible)
+--Additions--
+1) TopicEntryList now has the mode "answered".
+It shows entries with comments.
+
+-- Changes --
+1) Guests now get an error message when they
+try to vote a comment.
+2) Users now get an error message when they send
+invalid comments.
+3) Removed comment adding interface from admin.
+4) Uncommented entries now have proper margins.
+5) Banned users now cannot edit their published
+entries.
+
+--Deletions--
+None
+
+[0.177.0-dev-pre](2020.07.23)(incompatible)
+--Additions--
+1) Added views for adding/editing/removing
+comments.
+2) Added the permission to add comments.
+(Use admin panel to add this permission to users)
+**incompatible** run makemigrations+migrate for dictionary.
+3) Add print_entry_class template tag to reduce
+template logic complexity.
+
+-- Changes --
+1) Issued fix for a MAJOR site-wide vulnerability
+which allowed for arbitrary code execution via
+javascript (XSS).
+2) Editor buttons are now in includes, to be used
+across three editors.
+
+--Deletions--
+None
+
+[0.176.0-dev-pre](2020.07.22)(incompatible)
+--Additions--
+1) Added base for AMA feature. (Views for
+adding/editing comments are missing and
+a related mode for TopicEntryList is to be added.)
+**incompatible** makemigrations+migrate for dictionary
+
+-- Changes --
+1) Fixed entry permalink vote/favorite indicators.
+2) Optimized javascript function for entry voting.
+
+--Deletions--
+None
+
+[0.175.0-dev-pre](2020.07.21)(compatible)
+--Additions--
+1) Added follow button in author statistics
+page in profile.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.174.0-dev-pre](2020.07.20)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed index for initial set-ups, also added
+a warning message.
+2) In pinned entry, it is now possible to
+see external link indicator.
+
+--Deletions--
+None
+
+[0.173.0-dev-pre](2020.07.20)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed faulty acquaintances_entries. (draft
+entries were included, also replaced subquery
+with convenient Max)
+2) acquaintances_favorites will now include
+entries of novices.
+3) Fixed userstats_channels ordering for
+novice users.
+4) It is now possible to see entries of
+novices when searched with their name
+in topic entry list (e.g. @user).
+5) It is now possible to see entries
+of novices when you browse topic entry
+list via acquaintances mode.
+
+--Deletions--
+None
+
+[0.172.0-dev-pre](2020.07.19)(compatible)
+--Additions--
+1) Implemented index page.
+
+-- Changes --
+1) Updated cached_context to be compatible with
+django's method_decorator.
+2) Removed excessive spacing from entry.html.
+
+--Deletions--
+None
+
+[0.171.0-dev-pre](2020.07.19)(incompatible)
+--Additions--
+1) Added the option to disable read
+receipts for users. **incompatible**
+run makemigrations+migrate for dictionary.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.170.0-dev-pre](2020.07.19)(compatible)
+--Additions--
+1) Added site maps.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.169.0-dev-pre](2020.07.18)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Pinned entry section in user profile is now fully
+functional. Long entries are now truncated with a
+read more button. Also added edit and unpin
+buttons (for owners).
+
+--Deletions--
+None
+
+[0.168.0-dev-pre](2020.07.18)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Removed unused/redundant css rules. Also
+cleaned up UI a little bit.
+2) Fixed autocomplete logic for quote (") input.
+3) In login page it is now possible to see
+field errors.
+4) Fixed a regression introduced in 0.166.0-dev-pre
+which hindered access to entry permalink of novice users.
+
+--Deletions--
+None
+
+[0.167.0-dev-pre](2020.07.18)(incompatible)
+--Additions--
+None
+
+-- Changes --
+1) Revamped novice queue algorithm. A third parameter
+novice_priority is now considered. Each time the user
+visits the website (in 24 hour periods) this field is
+incremented by 1. This field is now the prime priority
+to get to the top of the list, meaning that users who
+hang out in the site more get more credit. If this
+field is the same for several users, the users who
+visited the site that day goes up, and among these users
+application date determines the final place.
+
+In novice list admin view, the number of novices listed
+is increased to 100 from 10. In individual novice view,
+removed the 'continue to next novice' button as it is
+difficult to implement with the new algorithm.
+
+Inaccessible novices won't be listed in the novice list
+and they won't be able to collect priority points as long
+as their inaccessibility continues.
+
+This is **incompatible**, run makemigrations+migrate
+for dictionary.
+
+--Deletions--
+None
+
+[0.166.0-dev-pre](2020.07.17)(compatible)
+--Additions--
+1) New template tag print_topic_title; properly formats
+TopicEntryList view title using mode and pagination.
+
+-- Changes --
+1) TopicEntryList chanes:
+    1) Fixed a bug in entry list which caused
+    erroneous count for show all entries button.
+    There is also exclusive message for topics
+    which has entries of novices but not of authors.
+    2) Optimized queries for entry_permalink.
+
+2) entry_prefetch had a faulty annotation, fixed
+that. Also deferred unused fields.
+3) Render header link template tag now fails silently.
+4) When a user archives a chat, all unread
+messages will be marked as read.
+
+--Deletions--
+None
+
+[0.165.0-dev-pre](2020.07.15)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed the visual bug with the entry actions
+pin button.
+
+--Deletions--
+None
+
+[0.164.0-dev-pre](2020.07.15)(compatible)
+--Additions--
+1) It is now possible to see some topic suggestions
+when the requested topic is not populated. Only
+available with PostgreSQL database backend.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.163.0-dev-pre](2020.07.14)(compatible)
+--Additions--
+1) New function in managers.py: entry_prefetch, a common
+utility for TopicEntryList and UserProfile (and Index, in
+the future).
+2) Add is_accessible property to Author (self-explanatory).
+
+-- Changes --
+1) Reverted the implemention that caused entry favorite
+counts to consider block status. It proved to be trivial.
+(Blocked users are not visible in the fav list.)
+2) Fixed a bug that allowed users to favorite entries of
+other users even if the favoriter was blocked by the target.
+3) Upvote and downvote status are now visible.
+4) Optimized the queries of fetching favorite counts
+and favorite status.
+5) Inaccessible (banned) users are now not allowed
+to create wishes.
+
+--Deletions--
+1) Removed get_favorite_count method from Entry.
+
+[0.162.0-dev-pre](2020.07.14)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Advanced search now searches by 'keywords'
+with PostgreSQL database backend.
+(do makemigrations+migrate for dictionary even if
+you don't use postgresql)
+2) Fixed tag regex, they include mising proper chars now.
+3) Removed @ and # chars from topic title regex.
+(if you decide to add them back, don't do so in
+tag regexs)
+4) Rename turkish_lower to i18n_lower and fix the
+behaviour for English.
+
+--Deletions--
+None
+
+[0.161.0-dev-pre](2020.07.13)(compatible)
+--Additions--
+1) Add DISABLE_NOVICE_QUEUE setting (self-explanatory).
+
+-- Changes --
+1) Author autocompletes and favoriters list now
+mutually consider blocking status.
+(run makemigrations+migrate for dictionary)
+2) Topics with more than 1000 entries are now humanized
+such as 1.0k etc.
+
+--Deletions--
+None
+
+[0.160.0-dev-pre](2020.07.13)(compatible)
+--Additions--
+1) Add 'mark all topics read' button in activity list.
+
+-- Changes --
+1) When a user deletes their account, the target
+conversations will now be archived instead of vanishing.
+(run makemigrations+migrate for dictionary)
+2) Optimized PeopleList a little, it now also considers
+accessibility (e.g frozen, banned etc. users won't show up)
+
+--Deletions--
+None
+
+[0.159.0-dev-pre](2020.07.12)(compatible)
+--Additions--
+1) Add delimiter for today's refresh, and related
+setting.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.158.0-dev-pre](2020.07.12)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Editing an announcement before its publish date won't
+record its editing date.
+2) Adjusted some spacing in front end.
+3) Blocking an user won't redirect to homepage unless
+it is blocked in their profile page.
+4) It was not possible to open modals in self profile
+page, fixed that.
+5) There is now a seperate button for sticking user stats
+to left frame.
+6) Fixed a breaking bug in left-frame userstats, which
+crashed the site with memcached backend.
+7) It was possible to see entries of blocked users in profile
+favorites page, fixed that.
+8) Some user stats had inconsistent ordering, fixed that.
+9) Blocking an user will remove of favorited entry records
+of that user.
+
+--Deletions--
+None
+
+[0.157.0-dev-pre](2020.07.10)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed faulty usage of date() method on timezone-aware
+datetime objects. today-in-history and top categories are
+now correctly list objects.
+
+--Deletions--
+None
+
+[0.156.0-dev-pre](2020.07.10)(incompatible)
+--Additions--
+1) Add in-site announcement feature. **incompatible**
+run makemigrations+migrate for dictionary.
+2) Add entry_count property to Topic, which gives the
+total number of published entries for the topic.
+
+-- Changes --
+1) When users had no following topics, unread_topic_count method
+would crash the site, fixed that.
+2) Updated Django to 2.2.14 from 2.2.13
+3) Updated graphene-django to 2.11.1 from 2.10.1
+
+--Deletions--
+None
+
+[0.155.0-dev-pre](2020.07.09)(incompatible)
+--Additions--
+1) In chat list, it is now possible to see unread message count
+for each individual chat.
+2) In activity list it is now possible to see unread entry count
+for each individual topic.
+3) In header user menu, it is now possible to see the total number
+of unread messages/topics.
+4) Usernames now have a 3rd validator which looks for some special cases.
+
+-- Changes --
+1) Fix archiving feature:
+    a) Users couldn't archive a chat if the target user
+    was already archived by another user. Fixed that.
+    b) Users could access other user's archives. Fixed that.
+    c) Archiving now extends existing archive instead of
+    truncating all the previous content.
+    **incompatible** run makemigrations+migrate for dictionary,
+    also delete all former archive objects if possible,
+    to preserve data integrity.
+2) Adjusted spacing of entry buttons in mobile.
+
+--Deletions--
+None
+
+[0.154.0-dev-pre](2020.07.08)(compatible)
+--Additions--
+1) Added indicator for drafts in TopicEntryList. Creating
+and editing times of draft entries are also tracked.
+
+-- Changes --
+1) TopicQueryHandler breaking bugs: (Thanks to Aras Diler):
+    a) Entry counts for today are now correct.
+    b) Fixed categories with 24-hour filter, they were suffering
+    from the same programming error described in 0.84.0-dev-pre.
+2) Fixed a bug in entry updating view where updating drafts caused
+them to have faulty timestamps when published.
+
+--Deletions--
+None
+
+[0.153.0-dev-pre](2020.07.04)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Moved can_send_message logic to user model.
+2) Optimized Chat view (queries and templating),
+also added unblock button.
+
+--Deletions--
+None
+
+[0.152.0-dev-pre](2020.07.01)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Some minor semantical changes to frontend and other
+minor optimizations.
+2) Use supertitle block to override the page title completely.
+3) Profile page statistic page urls now use
+path instead of query parameters.
+4) PasswordResetView now uses correct from e-mail.
+5) Fixed faulty acquaintances_entries, it now behaves
+correctly (just like userstats_channels).
+6) Add missing censorship check for wishes_all.
+7) Optimized notification behaviours in message sending forms.
+8) Deleting an entry will now deduct 2 karma points from user.
+
+--Deletions--
+1) Removed unused entry_full_url template tag.
+
+[0.151.0-dev-pre](2020.06.28)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Logged in users are not required to enter e-mail
+and verify it to send a report. It will be done
+automatically using registered e-mail.
+(For the small change in the model, run makemigrations+migrate)
+2) Extended top to include most liked entries of last week.
+
+--Deletions--
+None
+
+[0.150.0-dev-pre](2020.06.25)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed faulty userstats_channels. Instead of
+listing entries, it now lists topics with entry search for
+user.
+2) Move get_category_parameters logic into LeftFrame's
+parameters. Also create logic for tabs.
+
+~~~ I will be making more frequent updates to this project
+following July 5 ~~~
+
+--Deletions--
+1) get_category_parameters function in utils.
+
+[0.149.0-dev-pre](2020.06.04)(compatible)
+--Additions--
+1) Add decorator for_public_methods (description in docstrings)
+
+-- Changes --
+1) Left frame related bug fixes:
+    - Left frame context processor is now evaluated lazily.
+    (The data won't be fetched if the page is not using the
+    left frame, such as in mobile views)
+    - Left frame context processor now catches exceptions
+    instead of trying supressing them.
+    - Fixed a possible json decode error.
+    - Not passing a user instance caused an exception, fixed that.
+2) Left frame changes:
+    - Extended TopicListManager to be more extensible in the
+    future (parametric categories/extra).
+    - Ported user statistics into left frame. Also added new
+    channel statistics for users.
+    - drop activate_category alias
+3) Don't consider AnonymousUser in entry get_favorite_count
+4) Optimized UserProfile dispatch & TopicList get_context_data
+
+--Deletions--
+None
+
+[0.148.0-dev-pre](2020.06.02)(compatible)
+--Additions--
+1) Added name validator for Category model.
+Run makemigrations+migrate for dictionary to apply it.
+
+-- Changes --
+1) Non database categories' slugs are now in English.
+With this change all urls should be in English (tell me if not).
+2) Fixed yet another bug in TopicEntryList's 'following' method.
+3) Optimized archiving-deleting indiviudal button events (djdict.js).
+
+--Deletions--
+None
+
+[0.147.0-dev-pre](2020.06.01)(incompatible)
+--Additions--
+1) Add conversation archiving + deletion feature.
+**incompatible** run makemigrations+migrate for dictionary.
+2) Add ArchiveSerializer which serializes django objects
+following pk relations and removing metadata.
+3) Add strdate filter to parse str in datetime objects.
+
+-- Changes --
+1) Block user modal is no langer cached. (was unnecessary)
+2) Changed the inbox icon in top left user menu.
+3) Aligned seperator of the paginator.
+4) Fixed the header search bug introduced in the previous commit.
+(All other changes or additions are related to conversation
+archiving and deletion feature.)
+
+--Deletions--
+None
+
+[0.146.0-dev-pre](2020.05.30)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Small optimizations for frontend.
+2) Fixed a bug in TopicEntryList's following method.
+
+--Deletions--
+None
+
+[0.145.0-dev-pre](2020.05.30)(compatible)
+--Additions--
+1) Add channels tab for author profile.
+
+-- Changes --
+1) Optimized IntegratedFormMixin logic.
+
+--Deletions--
+None
+
+[0.144.0-dev-pre](2020.05.30)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed active category visual bug.
+2) Optimized e-mail confirmation backend.
+3) All base urls are now in English.
+
+--Deletions--
+None
+
+[0.143.0-dev-pre](2020.05.29)(compatible)
+--Additions--
+1) Add 2 new tabs for profile page statistics.
+
+-- Changes --
+1) Autocomplete suggestions now have min-width of 250px.
+
+--Deletions--
+None
+
+[0.142.0-dev-pre](2020.05.29)(incompatible)
+--Additions--
+1) Add clear cache button to admin panel.
+**incompatible** run makemigrations+migrate.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.141.0-dev-pre](2020.05.29)(incompatible)
+--Additions--
+1) order_by filter to order querysets in templates.
+2) get_external_urls tag to get external urls in templates.
+
+-- Changes --
+1) Flat pages and external urls are now handled
+at database level. (notice: right frame is cached)
+    -Add ExternalURL model
+    -Use django's Site and Flatpage apps.
+    **incompatible** run makemigrations+migrate
+2) Flat pages are now flat (they are no longer entry instances).
+3) Use Site model to change site name in title.
+4) Improved accessibility in left-frame.
+5) Improved signup page template logic.
+
+--Deletions--
+1) FLATPAGE_URLS, SOCIAL_URLS settings and
+url_social, url_flat tags.
+
+[0.140.0-dev-pre](2020.05.24)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Improved accessibility.
+2) Fixed a bug in conversation view where
+conversations with no message raised 500.
+
+--Deletions--
+None
+
+[0.139.0-dev-pre](2020.05.22)(compatible)
+--Additions--
+1) Added content skipper menu for users using
+tab navigation, this should improve accessibility
+a lot.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.138.0-dev-pre](2020.05.21)(incompatible)
+--Additions--
+1) Add badge system. You can now associate users
+with custom badges. **incompatible**
+run makemigrations+migrate for dictionary app.
+2) Add isValidText function in djdict to check
+for user content. (validate_user_text equivalent)
+
+-- Changes --
+1) Fixed the XSS vulnerability in wish sending form.
+2) Wish content now allows entry formatting options,
+it is also now validated via validate_user_text.
+3) Twitter and Facebook share links are removed from
+templates, instead they are generated using javascript.
+
+--Deletions--
+None
+
+[0.137.0-dev-pre](2020.05.20)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Instead of using boostrap-datepicker, use HTML5 date
+input in datepickers.
+2) Dropdown advanced search now won't close arbitrarily.
+3) Adjusted advanced search front-end in mobile.
+4) Fixed a bug in message sending modal which caused send
+button to be disabled indefinitely.
+
+--Deletions--
+1) Removed bootstrap-datepicker library.
+
+[0.136.0-dev-pre](2020.05.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Dried GraphQL calls in djdict.js.
+2) Fixed incorrect entry favorite count in profile page.
+
+--Deletions--
+None
+
+[0.135.0-dev-pre](2020.05.18)(**incompatible**)
+--Additions--
+1) Add feature to delete orphan messages automatically. (signals)
+2) Add validators module in utils.
+
+-- Changes --
+1) Refactored Conversation. (and related code) This is rather
+**incompatible** You will need to delete all Conversation objects
+from the database, (which means the deletion of the all Message
+objects as well) unless you write a script which will migrate the data.
+2) Optimized Conversation related views.
+3) Conversations are now not mutual.
+4) Fixed a critical bug where users could send invalid characters
+in entries. Also added this character delimiter for messages.
+5) Optimized EntryUpdate view and it shows the error message now.
+
+--Deletions--
+None
+
+[0.134.0-dev-pre](2020.05.14)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Upgraded bootstrap from 4.4.1 to 4.5.0.
+2) Improved accessibility.
+
+--Deletions--
+None
+
+[0.133.0-dev-pre](2020.05.13)(compatible)
+--Additions--
+1) TopicEntryList now has the 'acquaintances' mode
+which only shows entries from followed users.
+
+-- Changes --
+1) Fixed known remaining problems with the left-frame
+populating/opening behaviour for desktop and mobile.
+Category dropdown menu now doesn't diseapper in desktop to
+increase accessibility. Clicking categories in category list
+page now behaves correctly for desktop.
+2) Adjusted front-end in category list and presumably optimized
+the query.
+3) In profile page, favorite authors section now consider
+blocking status.
+4) Sending an invalid message in conversation list now do not
+flush the form data.
+
+--Deletions--
+1) Removed check_category_follow_status template tag.
+
+[0.132.0-dev-pre](2020.05.13)(incompatible)
+--Additions--
+1) Entry editor now linkifies links.
+(A good amount of time was wasted
+on this to make it work as intended.)
+
+-- Changes --
+1) Upgrades:
+    a) Upgrade Python from 3.7.6 to 3.8.2. **incompatible**
+       This project now only supports Python 3.8.2+
+    b) Upgrade graphene-django from 2.9.0 to 2.10.0.
+    c) Upgrade jQuery from 3.4.1 to 3.5.1.
+2) URL catching regex is optimized.
+3) Authentication check in frontend is now
+made by using body id tag.
+4) Fixed a bug introduced in 0.128.0-dev-pre,
+which messed up the entries' social links position.
+5) Moved email settings from utils.email to utils.settings
+6) Entries now do not allow turkish lira character.
+
+--Deletions--
+None
+
+[0.131.0-dev-pre](2020.05.10)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Move jquery.autocomplete.min.js to vendor folder.
+2) Some modes in TopicEntryList now have indicator
+near the topic title.
+3) Fixed a minor bug in TopicEntryList where unauthenticated
+users got wrong results when searching with is_in_favorites.
+4) Added the new 'links' mode to TopicEntryList. This mode now
+properly looks for links. Also optimized history mode's code.
+5) Autocomplete for authors now excludes blocked users.
+6) Adding '#' (without spaces) before a link in topic
+media will skip that link.
+
+--Deletions--
+None
+
+[0.130.0-dev-pre](2020.05.06)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Made Entry regex validator more readable.
+2) When novice users get accepted to novice
+list they will get a informative message.
+3) Entry favorites now exclude blocked users
+and inaccessible users.
+4) All other changes were made to optimize
+database access. (Currently, there are a lot of
+unoptimized queries. They will be adressed after
+the feature adding period)
+
+--Deletions--
+None
+
+[0.129.0-dev-pre](2020.05.05)(incompatible)
+--Additions--
+1) Add media feature for Topic. This feature is
+**incompatible** run makemigrations+migrate for dictionary.
+
+-- Changes --
+1) Author usernames can now include numbers. Also limited
+the minimum length of usernames to 3.
+2) In mobile, links in topic channels now work.
+3) Reused pagination.html for entry_list.html
+
+--Deletions--
+None
+
+[0.128.0-dev-pre](2020.05.04)(incompatible)
+--Additions--
+1) New manager for Author: AuthorManagerAccessible,
+only returns accessible users.
+2) Add vote limiting feature. See related settings.
+3) You can now change upper and lower karma boundaries
+in settings file.
+
+-- Changes --
+1) Extended upvoted and downvoted entries. This
+is **incompatible**. see before makemirations+migrate:
+https://stackoverflow.com/questions/26927705/
+2) Action button's context menu now loads only once.
+3) Context menu now checks for authentication in header,
+meta tag, not through individual entries.
+4) You are now properly redirected when you delete the
+last entry in the topic view.
+5) Increased voting cost.
+6) 'son' now looks for last 5 days.
+7) Author autocomplete and favorite authors in profile page
+now properly show authors (using accessible authors manager)
+8) Fixed a rare bug in ?q= search.
+9) Vote limiting feature related changes.
+
+--Deletions--
+1) Removed downvoted/upvoted info in admin.
+
+[0.127.0-dev-pre](2020.05.02)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fix a security flaw introduced in the previous commit.
+
+--Deletions--
+None
+
+[0.126.0-dev-pre](2020.05.02)(compatible)
+--Additions--
+1) New CsrfViewMiddleware.
+2) When using message sending modal, the entry in question
+is now added to the text area.
+
+-- Changes --
+1) Fixed the javascript file to make Safari users happy.
+2) When users first requested the site the csrftoken
+was not available, so they couldn't browse any categories
+until they got into a page with csrf_token. Fixed that.
+Now the csrf_token is set immediately when they first visit.
+3) In TopicEntryList, when users sent entries with invalid
+content, the entry content had been flushed, the content
+is now preserved.
+4) When using message sending modal, sending messages with
+multiple lines was impossible, fixed that.
+5) When sending reports, if the mail server couldn't send the mail,
+the form didn't show the error message it supposed to show, fixed that.
+(Such messages will be added to other e-mail sending views.)
+6) Typos.
+
+--Deletions--
+None
+
+[0.125.0-dev-pre](2020.04.30)(compatible)
+--Additions--
+1) Add get_following_topics_with_receipt method
+to Author to use as common api for calling following
+topics. Old topic-following api was buggy as it counted
+draft entries, entries by blocked etc., this new api
+fixes that.
+2) Add get_entry_count_by_threshold for DRY.
+3) Add get_generic_privateuser method in utils.
+4) Add some docs about GENERIC_PRIVATEUSER_USERNAME.
+
+-- Changes --
+1) Changed topic-following related queries to
+use newly added Author method.
+2) In TopicEntryList's following method, entry count now
+shows onlyin the first page, and it shows it correctly.
+Also removed unnecessary is_authentication check.
+3) In all template files, rename 'request.user' to 'user'.
+4) Add datetime attribute to time fields in entry.html
+for SEO.
+5) Instead of using custom timestamp template tag,
+use django built-in tag in activity_list.html
+6) Tidied up some html files and css.
+7) In Author model, remove Entry and use related lookup instead.
+8) Rename GENERIC_PRIVATEUSER_ID to GENERIC_PRIVATEUSER_USERNAME.
+9) Changed create_generic_superuser command to create_generic_user.
+It now handles creating all generic users.
+
+--Deletions--
+1) Removed the template tag 'timestamp'.
+
+[0.124.0-dev-pre](2020.04.30)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed minor visual issue related to searchbox's right border.
+2) Profile page changes:
+    a) Total object counts are now present near the title.
+    b) Instead of using Entry model, use related 'entry_set' to
+    be consistent and concise.
+    c) Favorite authors tab now do not include user itself. The
+    query now also selects only the username field.
+    d) etc. in template file.
+3) Reduced karma rates (and changed one of the karma expressions).
+
+--Deletions--
+1) Removed use_for_related_fields from EntryManagerOnlyPublished,
+it didn't have any effect, and we don't want it anyway.
+
+[0.123.0-dev-pre](2020.04.28)(compatible)
+--Additions--
+1) New management command: create_generic_superuser.
+Use this command to create superuser via
+GENERIC_SUPERUSER_USERNAME setting.
+2) Some docs related to generic_superuser.
+
+-- Changes --
+1) Change GENERIC_SUPERUSER_ID to GENERIC_SUPERUSER_USERNAME.
+2) Generic superuser can now send messages to everyone.
+3) Inactive users' profiles are now inacessible, they are
+not visible in autocomplete fields and they cannot recieve messages.
+4) Add/change some tests regarding message sending changes.
+
+--Deletions--
+None
+
+[0.122.0-dev-pre](2020.04.28)(compatible)
+--Additions--
+1) Added 'pin' icon to entry_list.html to
+indicate that the topic is pinned.
+2) Add index parameter to pagination.html,
+using it will give the left-frame style.
+
+-- Changes --
+1) When moving entries, if the target topic had
+wishes, that wishes didn't seem to be fulfilled,
+fixed that.
+2) Update jQuery to 3.5.0
+3) TopicEntryList changes:
+    a) Add 'popular' mode to support 'gundem'
+    b) Use login_required_modes as attribute
+    c) search now stirps whitespaces
+4) Removed a redundant line in TopicListHandler
+5) In profile page view:
+    a) Removed redundant prefetch_related fields
+    b) Some tabs are now have proper querysets.
+    c) Adjusted pagination front-end.
+
+--Deletions--
+None
+
+[0.121.0-dev-pre](2020.04.24)(incompatible)
+--Additions--
+1) Added karma feature. This is **incompatible**
+run makemigrations+migrate for dictionary app.
+
+-- Changes --
+1) Entry vote rate now allows up to 100k.
+2) Adjusted user profile page and fixed small
+accessibility problem in left_frame.html
+
+--Deletions--
+None
+
+[0.120.0-dev-pre](2020.04.23)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Fixed several issues with 'son' feature. The count
+now do not include draft entries, entries that were written
+by blocked users and entries that were written by novice
+users (only for authors). Novices lacked actual 'son'
+feature, they have it now. They'll see entries of novices
+and authors that were written after them.
+2) utils.admin logentry_instance function lacked
+object_repr argument, which resulted in undesired
+'blank' history in admin page, fixed that.
+
+--Deletions--
+None
+
+[0.119.0-dev-pre](2020.04.23)(compatible)
+--Additions--
+1) Add 'intermediate' decorator to better handle
+admin actions with intermediate pages.
+2) Tiny amount of docs (to be extended in the future).
+
+-- Changes --
+1) Use intermediate decorator for such actions.
+2) Optimize get_source_list method of IntermediateActionHandler.
+3) Added data-loaded tag for favorite list of entries so that
+uneccessary requests are hindered.
+4) Fixed a bug in favorite list where authors' names used in
+profile page links instead of the slug field.
+5) [Graph] Removed csrf_exempt from the endpoint.
+6) Removed some whitespace from HTML files.
+
+--Deletions--
+None
+
+[0.118.0-dev-pre](2020.04.21)(incompatible)
+--Additions--
+1) Reporting now needs e-mail verification. Added
+related fields to GeneralReport model, this is **incompatible**
+and could be challenging to migrate. I suggest you delete
+all your data in GeneralReport table then makemigrations+migrate.
+2) General optimizations for reporting feature.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.117.0-dev-pre](2020.04.19)(compatible)
+--Additions--
+1) You can now use extra_tags="persistent" argument
+in django messages framework to disable auto hiding
+behaviour of toasts. (I included an example.)
+
+-- Changes --
+1) Optimized notification back-end.
+
+--Deletions--
+None
+
+[0.116.0-dev-pre](2020.04.19)(compatible)
+--Additions--
+1) 'son' feature.
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.115.0-dev-pre](2020.04.19)(compatible)
+--Additions--
+None
+
+-- Changes --
+1) Refactored notification front-end.
+
+--Deletions--
+None
+
+[0.114.0-dev-pre](2020.04.18)(incompatible)
+
+--Additions--
+1) Add is_pinned field to Topic. This is **incompatible**,
+run makemigrations+migrate.
+2) Add gundem feature along with gundem filtering feature.
+3) [GraphQL] Add CategoryType.
+4) Add cog icon (icons.svg).
+5) Add breadcrumbs to login related pages to improve accessibility.
+
+-- Changes --
+1) In djdict.js's LeftFrame implemention, use graphql arguments.
+2) In djdict.js's LeftFrame setCookies, move variables to their proper places.
+3) When there is no entry is present in a topic in topic list,
+the count is hidden instead of showing zero (0).
+4) Fixed the critical bug in which entry dates were shown as
+UTC+0 instead of UTC+3 (in that settings.py local time).
+5) cached_context decorator no longer strictly requires
+first argument to be 'request'. Pass 'user' or 'request'
+argument to use with vary_on_user.
+6) TopicListManager changes:
+    a) Changed the position of the __init__'s 'slug' argument. It is now REQUIRED
+    as the first argument. User argument is second and the rest are the same.
+    b) Added type hints for __init__ method.
+    c) 'cache_timeout' now present in settings as DEFAULT_CACHE_TIMEOUT
+    d) 'timeouts' now present in settings as EXCLUSIVE_TIMEOUTS.
+    e) Adjusted _create_cache_key to be more readable.
+    f) Fixed a critical caching bug in 'hayvan-ara' where using is_in_favorites
+    (sadece entry favorilediğim başlıklarda ara) resulted in inconsistent results
+    due to global caching. It now caches per user when that option is selected.
+    g) Changed some docstrings and comments to be more explanatory.
+    h) Removed uneccessary variable in bugun.
+    j) Tidied up _cache_data to be more pythonic.
+7) Rename all "şifre" to "parola".
+8) Rename ALLOW_ANONYMOUS_VOTING settings to DISABLE_ANONYMOUS_VOTING for consistency.
+9) Updated readme a little.
+
+--Deletions--
+None
+
+[0.113.0-dev-pre](2020.04.12)(compatible)
+
+--Additions--
+1) Add generation feature and related settings.
+
+-- Changes --
+1) parse_date_or_none now always returns None
+in case of failure.
+2) Updated profile_entry_pinned.html to use entrydate filter.
+3) Clean whitespace in some html files.
+
+--Deletions--
+None
+
+[0.112.0-dev-pre](2020.04.05)(incompatible)
+
+--Additions--
+1) Add topic disambiguation feature. Use admin
+page to add disambiguations for topics. **incomptabile**
+Run makemigrations+migrate for dictionary.
+
+-- Changes --
+1) Tweaked Topic's admin page (to be end-user friendly).
+2) Tweaked Topic's fields.
+
+--Deletions--
+None
+
+[0.111.0-dev-pre](2020.04.04)(compatible)
+
+--Additions--
+1) Base set for 'son' category.
+
+-- Changes --
+1) Asynchronous calls for topic lists in desktop
+missed the category parameters. Fixed that.
+2) Fix a unimplemented case where TopicEntryList raised
+http 500. Overall optimization & semantic related changes
+made to TopicEntryList.
+
+--Deletions--
+None
+
+[0.110.0-dev-pre](2020.04.01)(compatible)
+
+--Additions--
+1) Add ukteler category.
+2) Add DISABLE_CATEGORY_CACHING setting.
+
+-- Changes --
+1) TopicListHandler now uses _caching_allowed
+property.
+2) Wishes are now deleted after they
+are fulfilled.
+3) UNCACHED_CATEGORIES setting now accepts tabs.
+4) Django version up 2.2.12 from 2.2.11.
+
+--Deletions--
+None
+
+[0.109.0-dev-pre](2020.03.31)(compatible)
+
+--Additions--
+1) Add tabbing feature to left frame.
+Related additions: TABBED_CATEGORIES setting
+and other additions to files which make use of LeftFrame
+2) New setting: USER_EXCLUSIVE_CATEGORIES (check settings.py info)
+
+-- Changes --
+1) Rename NON_DB_SLUGS_SAFENAMES into NON_DB_CATEGORIES_META.
+2) 'takip' is now divided into 2 tabs; 'entries': the entries
+written by user's following, 'favorites': the entries favorited
+by user's following. (using the new tab feature)
+3) takip is now properly cached. (using new USER_EXCLUSIVE_CATEGORIES)
+
+--Deletions--
+None
+
+[0.108.0-dev-pre](2020.03.30)(incompatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Bunch of changes, related to user experience
+and overall optimization. **incompatible**
+Run makemigrations+migrate.
+
+--Deletions--
+None
+
+[0.107.0-dev-pre](2020.03.30)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Instead of encoding hayvan-ara's search parameters
+with base 64 to use it as cache key, hash it with blake2.
+2) Updated js cookie library.
+3) Applied black to managers.py
+4) Changes related to cookie encoding removal.
+
+--Deletions--
+1) Don't encode cookies. Remove all stuff related
+to encoding & decoding.
+
+[0.106.0-dev-pre](2020.03.29)(incompatible)
+
+--Additions--
+1) Add ukte feature. Related additions are:
+Wish Model, [Graph] mutation WishTopic, Javascript
+client code for WishTopic calls, wish.html, entry_list.html
+Entry save() method additions, Topic m2m wishes, minimal css
+and wished_by filter. **incompatible** Run makemigrations+migrate.
+2) Add new tag for entry formatting. (formatted docstrings 7th explanation)
+
+-- Changes --
+1) Disabled some fields related to Topic and adjusted
+verbose names.
+2) Yet again, get_or_pseudo had a regression where
+users redirected to 404 topic page instead of existing topic.
+Fixed that.
+
+--Deletions--
+1) in entry_list.html there was a redundant subsequent_entries_count
+block, removed that.
+2) in entry_list.html there was a redundant banned check, removed that.
+
+[0.105.0-dev-pre](2020.03.29)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Move m2m models to new m2m.py.
+2) Adjusted some property methods of Author model.
+
+--Deletions--
+1) Removed blank=True and null=True from EntryFavorites date_created.
+Run makemigrations+migrate and ignore the warning.
+
+[0.104.0-dev-pre](2020.03.26)(compatible)
+
+--Additions--
+1) Added bunch of new icons. (to be used instead of
+material icons)
+
+-- Changes --
+1) Upgrade front-end libraries.
+2) Minor front-end changes.
+3) Changed the icon library.
+4) Remove unused prefetch_related parameters in
+TopicEntryList.
+5) (ara: xyz) tag did not work properly due to
+regression caused by previous commits. Fixed that.
+6) (ara: xyz) can now alternatively be used like
+(ara: @xyz) which will search for the author.
+7) In mobile, swh tag now renders properly.
+8) Optimize handling media queries of javascript.
+
+--Deletions--
+1) Removed material-icons library.
+
+[0.103.0-dev-pre](2020.03.26)(incompatible)
+
+--Additions--
+1) Add slug field for Author. This is **incompatible**.
+
+To migrate & preserve your current data:
+
+a) Remove unique=True from Author.slug, add null=True then run makemigrations+migrate.
+b) Run this script to properly update existing Author's slugs.
+
+    from uuslug import slugify
+    for author in Author.objects.filter(slug__isnull=True):
+        author.slug = slugify(author.username)
+        author.save()
+
+(at this point make sure you don't have any null value on slugs)
+c) Revert Author.slug to it's original state. run makemigrations,
+when prompted, select option 2 (handle existing rows with NULL myself)
+then run migrate.
+
+-- Changes --
+1) Fix the regression caused by the previous commit which
+malfunctioned block and message buttons (in profile).
+2) Use Author's slug field instead of username in relevant urls.
+
+--Deletions--
+None
+
+[0.102.0-dev-pre](2020.03.25)(compatible)
+
+--Additions--
+1) New filter entrydate to properly render entry date info.
+2) Icon sprite file for new entry style.
+
+-- Changes --
+1) Completely revisit the structure & design of entry footer.
+Implement a brand new look for mobile views.
+2) Related javascript changes.
+3) In profile, change the latest entry date format.
+4) In message sending modal, add username indicator.
+5) Use spaceless tag for all view templates.
+
+--Deletions--
+1) Remove vote indicators in entry footer due to
+performance concerns.
+
+[0.101.0-dev-pre](2020.03.23)(compatible)
+
+--Additions--
+1) New setting: ALLOW_ANONYMOUS_VOTING (self-descriptive)
+2) Altered & added m2m signals/utilities to handle vote_rate
+of entries more easily.
+
+-- Changes --
+1) [Graph] Implemented entry voting.
+2) Relevant javascript changes.
+3) In mobile, clicking header links caused ConnectionAbortedError
+due to an oversight caused by LeftFrame implemention, fixed that.
+4) VOTE_RATES setting syntax.
+
+--Deletions--
+1) Deleted deprecated: JSONView, JsonView, utils.require_ajax
+views.json, urls.json.
+
+[0.100.0-dev-unstable](2020.03.23)(compatible)
+
+--Additions--
+1) New m2m signal: update_vote_rate_favorite.
+Adding or removing from favorited_entries now
+automatically changes the vote rate of the entry.
+
+-- Changes --
+1) [Graph] Implemented entry actions.
+2) Relevant javascript client code.
+
+--Deletions--
+1) Deleted deprecated EntryAction view.
+
+[0.99.0-dev-unstable](2020.03.22)(compatible)
+
+--Additions--
+1) New proceed_or_404 context manager. See docstrings.
+
+-- Changes --
+1) Use black code style (line length == 120)
+2) Minimal changes to improve readibility & optimize
+existing code.
+
+--Deletions--
+1) Deleted unused force_post, force_get decorators.
+
+[0.98.0-dev-unstable](2020.03.22)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) [Graph] Implemented category actions.
+2) Relevant javascript client code.
+
+--Deletions--
+1) Deleted the deprecated CategoryAction view.
+
+[0.97.0-dev-unstable](2020.03.22)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) [Graph] Implemented topic actions.
+2) Relevant javascript client code.
+
+--Deletions--
+1) Deleted the deprecated TopicAction view.
+
+[0.96.0-dev-unstable](2020.03.21)(compatible)
+
+--Additions--
+1) [Graph] New utility decorator login_required (self-descriptive)
+
+-- Changes --
+1) [Graph] Implemented user actions.
+2) Relevant javascript client code.
+
+--Deletions--
+1) Deleted the deprecated UserAction view.
+
+[0.95.0-dev-unstable](2020.03.21)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) [Graph] Semantic changes for compose message mutation.
+2) [Graph] Move autocomplete namespace to schema.py
+
+--Deletions--
+1) On profile page, message sending modal no longer includes
+author username input. Also remove caching from modal template.
+
+[0.94.0-dev-unstable](2020.03.20)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) [Graph] Semantic changes for AutoComplete API. (also folder structure)
+2) [Graph] Create types module to hold shared types
+3) Changes to front-end javascript to conform api.
+
+--Deletions--
+None
+
+[0.93.0-dev-unstable](2020.03.19)(compatible)
+
+--Additions--
+1) AutoComplete endpoints (Topic and Author) for Graph API.
+
+-- Changes --
+1) Client-side AutoComplete calls adjusted for Graph API.
+
+--Deletions--
+1) Deleted the deprecated AutoComplete view.
+
+[0.92.0-dev-unstable](2020.03.19)(compatible)
+
+--Additions--
+1) New application: Base Graph API for django-sozluk.
+2) New Graph Query: TopicListQuery (replaces views.json.AsyncTopicList)
+3) New Graph Mutation: ComposeMessage (replaces views.json.ComposeMessage)
+
+-- Changes --
+1) This project now requires graphene-django and its dependencies.
+2) Use new API endpoint in djdict.js for LeftFrame and message sending.
+3) Deprecate all JsonView related views.
+
+--Deletions--
+1) Removed json views: AsyncTopicList, ComposeMessage.
+
+[0.91.0-dev-pre](2020.03.16)(compatible)
+
+--Additions--
+1) New LeftFrame in djdict.js, now handles left-frame
+using serializers.LeftFrame.
+2) New JSONView to replace JsonView.
+
+-- Changes --
+1) spam_entries command now allows topic specific spamming.
+2) left frame paginator is now prettier.
+3) Adjusted certain functions/semantics in templates for the new LeftFrame
+4) Deprecated JsonView.
+5) AsyncTopicList now uses JSONView, also refactored for new LeftFrame.
+6) TopicListHandler's __init__ method no longer sets up the query.
+(moved to _get_data). delete_cache now has the flush parameter (see docstring).
+Before this change, you needed to call the manager twice to get the actual data after
+deleting. Removed fetch_cached.
+7) tarihte-bugun is now precise.
+
+--Deletions--
+1) LefFrame related functions:
+leftFrameReset, topicListCall, leftFramePopulate.
+
+[0.90.0-dev-pre](2020.03.14)(compatible)
+
+--Additions--
+1) New TopicList view that uses LeftFrame
+interface.
+2) New file: serializers.py:
+New PlainSerializer and PageSerializer (read the docstrings)
+3) Move LeftFrame to serializers, it now inherits from
+PlainSerializer. Now completely includes page object, thus
+pagination data (serialized via PageSerializer).
+4) Add deprecation flag for TopicListHandler's fetch_cached.
+
+-- Changes --
+1) Alter left_frame.html and topic_list.html to comply
+with new LeftFrame api.
+2) get_category_parameters no longer use empty string as the default
+value as null values won't taken into consideration by LeftFrame.
+3) Alter TopicListManager:
+    a) year now handled via _validate_year method
+    which validates the year. (the fallback value is set to 2020, no longer random).
+
+    b) slug_identifiers is now a property method.
+4) Alter _year of LeftFrameProcessor to comply with new _validate_year.
+
+--Deletions--
+1) Deleted the deprecated TopicList.
+
+[0.89.0-dev-pre](2020.03.14)(compatible)
+
+--Additions--
+1) New 'LeftFrame' manager, an interface for TopicListManager.
+From now on, ALL topic-list related views will use this common
+interface.
+2) Add deprecation flags to the parts that haven't been
+refactored for LeftFrame usage.
+
+-- Changes --
+1) Refactored LeftFrameProcessor. Now it uses LeftFrame.
+
+--Deletions--
+1) CategoryAction follow() no longer refreshes the 'bugun'
+category.
+
+[0.88.0-dev-pre](2020.03.08)(incompatible)
+
+--Additions--
+1) Added login_required_modes for TopicEntryList, these
+modes are not open to visitors.
+2) Added date_created field to TopicFollowing.
+
+-- Changes --
+1) TopicFollowing is now used as a m2m field (via through).
+2) Following changes were made to comply with new TopicFollowing:
+-Author has_unread_topics logic
+-ActivityList get_queryset method (and template)
+-TopicAction follow method
+-TopicEntryList following method
+Notice **incompatible**: In order to migrate new structure of
+TopicFollowing, makemigrations and migrate. Set timezone.now manually
+for the default value of date_created.
+
+--Deletions--
+1) Remove activity_latest_entry template tag, it is
+redundant with new TopicFollowing changes.
+
+[0.87.0-dev-pre](2020.03.07)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Changed the logic of advanced search.
+
+a - Instead of chaining filters and annotations, use them all at once.
+    This drastically improves query speeds.
+b - Instead of showing ALL counts for topic entry counts, filter based on the
+    search fields.
+c - nice_only now do not look for sum of vote_rates, it looks
+    for a nice individual entry.
+
+2) Revert removed queryset evaluation while caching.
+(because AsyncTopicList needed a serializable object)
+
+--Deletions--
+None
+
+[0.86.0-dev-pre](2020.03.07)(compatible)
+
+--Additions--
+1) New inclusion tag render_header_link, renders non-db header links
+more neatly. (changes were made to related files)
+
+-- Changes --
+1) pagination.html now has proper selector for javascript.
+2) NON_DB_SLUGS_SAFENAMES now also holds the description of
+the category. Relevant changes were made to support this.
+3) Add çaylaklar to login required categories.
+
+--Deletions--
+1) header_links folder and its contents.
+
+[0.85.0-dev-pre](2020.03.07)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Instead of using context processors, use user object
+to show indicator of new message/new topic content.
+2) Downgrade cookie.min.js version. Newer version doesn't
+follow RFC 6265 strictly, which somehow affects the btoa functions.
+Will be fixed when the stable version (3.0.x) of the library comes out.
+3) Bump django to 2.2.11, user_agents to 2.1
+
+--Deletions--
+1) Context processors: message_status, following_status.
+
+[0.84.0-dev-pre](2020.03.02)(compatible)
+
+--Additions--
+1) In mobile front-end, redundant part of the header will not be
+visible as the user scrolls, allowing for better browsing experience.
+
+-- Changes --
+1) Static-import use of TIME_THRESHOLD_24H was faulty, it would
+always generate the same result (threshold from first import time).
+Instead used the callable utility function time_threshold.
+I deem prior versions are pretty much unusable.
+
+--Deletions--
+1) TIME_THRESHOLD_24H
+
+[0.83.0-dev-pre](2020.03.01)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) FormPostHandlerMixin + FormMixin now reads IntegratedFormMixin.
+Changes were made to the views which use FormPostHandlerMixin.
+2) Use SuccessMessageMixin where applicable.
+
+--Deletions--
+1) Remove unused is_valid_topic_title filter.
+
+[0.82.0-dev-pre](2020.02.29)(incompatible)
+
+--Additions--
+1) New manage.py command: commit_user_terminations. Set a cronjob
+to this command to apply user deletions.
+2) New field is_private for Author (instead of property). Private
+users' profile will be hidden, they won't be shown in search results.
+Their entries will have no user info. User actions do not apply to them.
+It kind of creates a 'ghost' user. Primarily used as holder for anonymous
+deleted users (with legacy). Set GENERIC_PRIVATEUSER_ID properly so that account
+deletions works properly.
+3) New AccountTerminationQueueManager, handles account termination payloads.
+
+-- Changes --
+1) Redirect admin login/logout views to custom auth views. To
+ensure that login/logot utilities work as intended for administrators.
+2) Template/view/model changes related to is_private or account deletion.
+-> (views.json.AutoComplete, views.detail.UserProfile, includes/entry.html,
+terminate.html, MessageManager, Author, Entry, Message)
+Note: Models have changed to conform for account termination. These changes are
+**incompatible**, run makemigrations then migrate dictionary to alter fields.
+3) In TopicEntryList, a query with forward slash in search such as '@admin/'
+caused HTTP 500, fixed that.
+4) PRIVATE_USERS is now set in admin page.
+5) Message sending test adjusted to use is_private instead of is_terminated
+
+--Deletions--
+1) Remove redundant LEGACY_ANONYMOUS option from account termination.
+Freezing account and never logging in again will serve the same purpose.
+Author field is_terminated was going to be used with this option, that
+option is gone as well.
+
+[0.81.0-dev-pre](2020.02.29)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Rename cache_retval to cached_context and change api. Now, request
+as the first argument required. Add vary_on_user to cache per user.
+Context processors are now cached properly using this decorator.
+2) Minor code style changes
+
+--Deletions--
+None
+
+[0.80.0-dev-pre](2020.02.29)(incompatible)
+
+--Additions--
+1) Many additions related to Account deletion process. Payloads
+are not implemented yet, so the accounts actually don't get
+deleted. (Frozen option is working as intended). AccountDeletionQueue
+model holds the acoounts to be deleted (and frozen).
+These additinos include 2 fields in Author and a brand new
+model, so it is **incompatible**, run: 'makemigrations dictionary',
+'migrate dictionary' consecutively so that new fields and model are created.
+2) is_private property for Author. It is also related to account deletion,
+but it can be used for other purposes. (via PRIVATE_USERS setting)
+3) New PasswordConfirmMixin. Check docstrings.
+4) ChangePassword now sends email notification to user.
+
+-- Changes --
+1) Adjusted messaging/added test so that it conforms account deletion status.
+2) Fixed a bug in EmailChangeForm, it raised Http 500 when invalid e-mail
+adresses such as a@a were given, now it renders properly and shows error messages.
+
+--Deletions--
+1) Remove cachers from user-varying context processors. They do
+not work as intended. cache_retval will be adjusted in the next commit.
+
+[0.79.0-dev-pre](2020.02.22)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) TopicQueryHandler API changes. Create set_at for every cached
+item. Implement cache key creation as a seperate method. Create
+timeout mapper for cache timeouts. Change some method names to be
+'private', as to show that they are not intended to be called
+externally. This change may be **incompatible** for you if you used
+this API before.
+2) In context_processors use contextlib.suppress instead of
+try, except: pass.
+3) In utils, change **kwargs to acutal proper names.
+
+--Deletions--
+None
+
+[0.78.0-dev-pre](2020.02.22)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Split TopicListManager into TopicQueryHandler and TopicListHandler.
+Their names suggest what they do. Check out docstrings! This change may
+be **incompatible** for you if you overrode TopicListManager.
+
+--Deletions--
+None
+
+[0.77.0-dev-pre](2020.02.16)(compatible)
+
+--Additions--
+1) New BaseDebugCommand subclass in managements/commands,
+created so that in the future it will be (a little) more flexible
+to write debug-only commands.
+
+-- Changes --
+1) Use BaseDebugCommand to handle debug-only commands.
+
+--Deletions--
+None
+
+[0.76.0-dev-pre](2020.02.15)(compatible)
+
+--Additions--
+1) New cleanup_expired command that deletes expired database
+objects
+
+-- Changes --
+1) In Author model add is_active to REQUIRED_FIELDS so that
+the field pops up in createsuperuser command, allowing properly
+activated super user creation.
+2) In project settings, add default value for SECRET_KEY to speed
+up setting up development environment.
+3) Alter spam_entries and spam_topics commands so that they
+are not usable in production enviroment.
+4) utils.parse_date_or_none now escapes arbitrary exception catching
+5) UserProfile dispatch method now properly checks for tab
+6) EntryUpdate dispatch method removed and moved into get_object
+7) UserAction now handles actions in a more neat/proper way
+8) In json views, convert dict()'s into {}'s (as it should be)
+9) In TopicEntryList, alter _qs_filter, so that it can escape
+prefetch_related and select_related when not required (and adjust related queries)
+
+--Deletions--
+None
+
+[0.75.0-dev-pre](2020.02.10)(compatible)
+
+--Additions--
+1) New cache_retval decorator that caches functions
+using django's low-level caching api. (used for context
+processors)
+2) New property of Topic, valid. Returns true for existing
+objects and False for pseudo topics that are not valid with
+given title.
+3) List of contributors
+
+-- Changes --
+1) Context processors (except LeftFrame which is cached
+internally), are now cached.
+2) Changed some template rendering tags to optimize
+database queries. (entry_list.html, inbox.html)
+3) Altered topic manager's get_or_pseudo to comply
+with new template structure of entry_list.html
+4) Alter one line to reduce one query, in TopicEntryList
+
+--Deletions--
+None
+
+[0.74.0-dev-pre](2020.02.05)(compatible)
+
+--Additions--
+1) Add default value for url_flat to prevent
+KeyError on first installation.
+
+-- Changes --
+1) Up packages, django 2.2.10 from 2.2.9, django-uuslug
+from 1.1.9 to 1.2.0
+2) LeftFrameProcessor now handles authorization control
+in a more correct way.
+
+--Deletions--
+None
+
+[0.73.0-dev-pre](2020.02.04)(compatible)
+
+--Additions--
+1) This project now uses 2 more external libraries,
+"js-cookies" in javascript and "user_agents" in Python.
+2) New middleware: MobileDetectionMiddleware, detects if
+the user is mobile or not and adds the bool value to the request.
+(This is/will used to not render some parts of the website to mobile
+users, left frame is the first example)
+3) New context processor: LeftFrameProcessor
+4) New b64decode_utf8_or_none utility that decodes a base 64
+string into a python str object. (Used to decode cookie values)
+5) New get_category_parameters utility that gets parameters for
+given category slug. (Used in LeftFrameProcessor and TopicList view)
+6) New DEFAULT_CATEGORY setting that identifies the category to be
+loaded when the user first requests the website
+7) New base64 related decoder/encoder functions in djdict.js (used
+to encode/decode cookies)
+8) Left frame scrollbar is now tracked.
+
+-- Changes --
+1) Left frame data now loads before the view is processed, this
+way left frame data loads faster and in a more elegant way.
+LeftFrameProcessor is used to fetch the data via TopicListManager.
+This context processor goes hand in hand with javascript, communicating
+via cookies. So left frame data is no longer maintained in localStorage.
+2) "Hayvan-ara" is now cached.
+3) "Gündem" does not raise ZeroDivisionError, but it has a dummy text instead.
+(Hopefully I'll implement it Soon™)
+4) Move left-frame to the new template file as it gets too clustered in base.html
+5) Fix a bug in TopicListManager that caused extra cache key generetion
+when the year parameter used with the non-tarihte bugün slugs.
+6) views.list.TopicList's year property is now cached_property as
+it is acessed multiple times.
+7) views.list.TopicList now uses get_category_parameters instead
+of generating them in view itself
+8) Changed some template fragments to be capable of handling new context
+processor (particularly for determining active category)
+9) Reporting template had a missing link, added that.
+
+--Deletions--
+1) Remove the function needed to get csrftoken from cookies, use
+js-cookies library to fetch csrftoken instead.
+2) Remove the javascript code that loaded left frame date on page
+load, (used LeftFrameProcessor instead).
+
+[0.72.0-dev-pre](2020.02.01)(compatible)
+
+--Additions--
+1) New time_threshold function in utils that returns
+time difference from now.
+
+-- Changes --
+1) Some minor frontend adjustments
+2) Modal templates are now permanently cached.
+3) Convert all dict() instances into {} (as it should be)
+4) Remove ugettext_lazy in author model.
+5) test_profile_entry_counts now works properly. (added missing cases)
+6) Categorize author model fields so that the model is more legible
+
+--Deletions--
+None
+
+[0.71.0-dev-pre](2020.02.01)(compatible)
+
+--Additions--
+1) New populateSearchResults function to handle search
+requests 'drily'.
+2) New tags for entry content, (ara: something), #entry,
+(bkz: #entry) and (bkz: @someone) (descriptions in filters.py)
+
+-- Changes --
+1) Change asterisks symbol on entry editor.
+2) In djdict.js, use .text instead of .html for changing
+slug safenames to prevent html injection
+3) Change tag prompt descriptions.
+4) Dropdown search now uses populateSearchResults
+5) Revamp 'formatted' filter to look neater. Added tag
+descriptions. And changed existing tag regexs to be more
+accurate.
+6) TopicEntryList now do not raise HTTP 500 when query
+string are given for non-existing (pseudo) topics.
+
+--Deletions--
+None
+
+[0.70.0-dev-pre](2020.01.22)(compatible)
+
+--Additions--
+1) Add url handling templatetags to handle social
+and flatpage urls.
+2) Add social and flatpage url settings. Set yours
+properly to avoid KeyError(s).
+3) Update screenshots
+
+-- Changes --
+1) Entry permalinks now show full entry, instead of
+showing trimmed entry with show more button.
+2) Show more button now loads properly. (Attached to
+window onload function)
+3) Links with blank attributes show external link indicator
+only in entry content.
+4) Footer is now cached permanently.
+
+--Deletions--
+None
+
+[0.69.0-dev-pre](2020.01.21)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) Adjusted frontend. Adjust any links with href "#" and
+treat them as a button to improve accessibility and ux.
+Right frame now behaves more responsively. Left frame
+has no horizontal scrollbar.
+
+
+--Deletions--
+None
+
+[0.68.0-dev-pre](2020.01.20)(compatible)
+
+--Additions--
+1) Add tarihte-bugun link for mobile views.
+
+-- Changes --
+1) Adjusted frontend. Set site width to 1240px, 740px
+is for content and 250px for each sidebar at maximum
+viewport. Class 'content' scales according to viewport at
+smaller screen sides. Right frame now returns to bottom at
+1092px. With this change, the site does not behave like
+sphagetti in larger screens.
+
+--Deletions--
+None
+
+
+[0.67.0-dev-pre](2020.01.19)(compatible)
+
+--Additions--
+1) New logentry_instance, logentry_bulk_create functions to
+bulk admin logs
+
+-- Changes --
+1) Use more performant counterparts for updating and creating
+bulk objects in action related views
+2) Alter IntermediateAcionMixin's object_list into get_object_list()
+3) Move log_admin into utils.admin
+
+--Deletions--
+1) Remove message sending in TopicMove action as it takes
+too much time. It should be implemented as a background action, but
+setting up celery is too much work so, I laid aside this feature.
+
+
+[0.66.0-dev-pre, 0.66.1-dev-pre](2020.01.17)(compatible)
+
+--Additions--
+1) Add permission for topic move action
+
+-- Changes --
+1) Use IntermediateActionHandler for topic move (as it should be)
+2) Fix a bug where users could see each others suspension info
+
+--Deletions--
+None
+
+
+[0.65.0-dev-pre](2020.01.16)(incompatible)
+
+--Additions--
+1) New IntermediateActionMixin to handle admin actions easily
+and to make new intermediate action creation easier
+2) New IntermediateActionView, inheriths from IntermediateActionMixin
+combined with PermissionRequiredMixin and View (to be used standalone)
+3) New SuspendUser action to suspend users.
+4) New UnsuspendUser action to lift suspension of users.
+5) New get_generic_user function in utils to fetch generic superuser
+6) New suspend_user.html, unsuspend_user.html templates (related to new views)
+7) New InputNotInDesiredRange exception (related to IntermediateActionMixin)
+8) New admin utilities module
+9) New IntermediateActionHandler utility that handles admin action functions
+10) New suspend_user permission
+
+-- Changes --
+1) Rename Author banned_until field to suspended_until **incompatible**
+2) Rename Author is_banned property to is_suspended **incompatible**
+3) TopicMove is now IntermediateActionView
+4) Alter TopicMove post function so that it is more
+legible and somehow more faster.
+5) Alter TopicEntryList so that suspended user cannot
+publish their entries (but they can create drafts)
+6) Alter EntryUpdate so that suspended user cannot
+publish their entries (but they can edit existing drafts)
+7) Alter profile.html to include suspension information
+8) Alter topic_move.html, entry_list.html, entry_update.html
+so that on form submission, the submit button gets disabled
+9) In novices.py use get_generic_superuser instead of fetching
+it manually
+
+--Deletions--
+1) Remove Author model import from utils.settings to prevent
+circular import
+
+
+[0.64.0-dev-pre](2020.01.12)(compatible)
+
+--Additions--
+1) Date delimiter for TopicMove action
+2) TopicMove action now logs actions
+3) Success message after posting an entry
+
+-- Changes --
+1) Change log_admin's object_repr argument
+2) TopicEntryList's _redirect_to_self now uses topic's
+get_absolute_url method
+
+--Deletions--
+None
+
+
+[0.63.0-dev-pre](2020.01.11)(compatible)
+
+--Additions--
+1) New topic action: TopicMove. It moves all entries in a topic to
+desired topic.
+2) New permission for Topic: move_topic (used in TopicMove)
+
+
+-- Changes --
+1) Use PermissionRequiredMixin in admin.novices views (as it should be)
+2) In NoviceLookup use imported model attribute for novice status instead
+of hard-coding them
+3) Conversation.html now formats message contents
+4) In views.json Vote used 'reduce' as a variable name, which shadowed the
+built-in method. Renamed it to 'decrease'.
+
+
+--Deletions--
+None
+
+
+[0.62.0-dev-pre](2020.01.11)(compatible)
+
+--Additions--
+1) Model manager tests. (test_model_managers)
+2) Add self-messaging case for test_message_preferences (test_models)
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.61.0-dev-pre](2020.01.09)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+Use built-in unittest.mock instead of standalone mock package
+
+--Deletions--
+None
+
+[0.60.0-dev-pre](2020.01.09)(incompatible)
+
+--Additions--
+New session backend
+New session model
+
+-- Changes --
+1) Instead of django's default session backend use newly written
+session model to pair users with sessinos. In future there will
+be account deletion feature, which will make use of this backend.
+
+This change is **incompatible** as you need to migrate data from
+django_sessions to dictionary_pairedsessions (if you really care about
+currently stored session data, otherwise nothing needs to be done except
+new session model migration).
+
+--Deletions--
+None
+
+[0.59.0-dev-pre](2020.01.08)(compatible)
+
+--Additions--
+1) Bunch of Model tests (see commit diff)
+
+-- Changes --
+None
+
+--Deletions--
+None
+
+[0.58.0-dev-pre](2020.01.08)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+1) In TopicEntryList view, 'following' function used naive datetime
+object, it is now fixed to use tz aware datetime (as it should be)
+2) Change default bodyattr in base.html
+3) Remove redundant bodyattr block in templates (where not needed)
+
+--Deletions--
+None
+
+[0.57.0-dev-pre](2020.01.07)(compatible)
+
+--Additions--
+1) New parse_date_or_none utility function that parses date
+strings into django timezone aware datetime objects, also
+allowing timedelta kwargs to calculate deltas.
+
+-- Changes --
+1) Input validaiton for havyan_ara date strings now use newly
+added parse_date_or_none function
+2) In TopicListManager, delete_cache method now appropriately sets
+cache_exists and cache_key attributes to null values in method itself,
+instead of doing it immediately after calling method.
+
+--Deletions--
+None
+
+[0.56.0-dev-pre](2020.01.05)(compatible)
+
+--Additions--
+1) For mobile topic list view, include query string parameters
+for topic urls.
+2) Add missing query string parameters for desktop topic list
+
+-- Changes --
+1) Include missing slash before query string parameter in desktop
+topic list
+2) Minor front-end adjustment
+3) Changed entry list html title so as to be more accurate
+4) Change syntax of getting tarihte-bugun year in mobile topic
+list view
+
+--Deletions--
+None
+
+[0.55.0-dev-pre](2020.01.03)(compatible)
+
+--Additions--
+1) New RegexValidator for Entry
+
+-- Changes --
+1) Changed footer layout to look more promising and responsive.
+2) Some form fields raised 500 when the query was empty. Fixed
+those errors by adding strip() & whatsoever.
+3) EntryForm form now handles errors more responsively
+3) EntryForm now automatically (turkish) lowers all characters.
+4) Remove erroneous chars from topic title validator
+
+--Deletions--
+None
+
+[0.54.0-dev-pre](2020.01.02)(compatible)
+
+--Additions--
+None
+
+-- Changes --
+Adjusted frontend related fields/html classes so as to
+improve responsibility. (only minor changes and fixes)
+
+--Deletions--
+None
+
+[ 0.53.0-dev-pre](2019.12.30)(compatible)
+
+--Additions--
+1) New footer in base.html
+
+-- Changes --
+Changed the verbose name of can_activate_user permission
+to 'çaylak lisesine erişim'
+
+Changed some css properties related to header so as to
+improve responsibility
+
+--Deletions--
+Removed some css properties related to header so as to
+improve responsibility
+
+[0.52.0-dev-pre](2019.12.29)(incompatible)
+
+--Additions--
+1) Added this very CHANGELOG file
+
+-- Changes --
+1) New EntryFavorites model to create through
+relationship with Author m2m field favorite_entries
+Now, favorite_entries has the field 'date_created'
+
+This is an *incompatible* change from previous versions.
+Check solutions in the link below to migrate your models
+https://stackoverflow.com/questions/26927705/
+
+2) views.detail.UserProfile now sorts user's favorite
+entries properly (using newly added date_created field)
+
+-- Deletions --
+1) Removed favorite_entries m2m field from AuthorAdmin

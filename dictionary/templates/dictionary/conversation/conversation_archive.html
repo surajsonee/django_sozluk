@@ -1,0 +1,49 @@
+{% extends "dictionary/base.html" %}
+{% load filters humanize i18n %}
+
+
+{% block title %}{% blocktrans with username=object.target context "titleblock" %}@{{ username }} - conversation archive{% endblocktrans %}{% endblock %}
+
+{% block content %}
+    <h1 class="h4">
+        {% blocktrans trimmed with username=object.target %}
+            <strong>archived conversation with @{{ username }}</strong>
+        {% endblocktrans %}
+    </h1>
+
+    <div class="chat-quick-links d-flex justify-content-between align-items-center mb-1">
+        <div class="svg-group">
+            <a href="{% url 'messages-archive' %}" class="mr-2" title="{% trans "enough lingering here" %}">
+                <svg fill="currentColor" width="24" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <use href="#arrow-left"></use>
+                </svg>
+                <span>{% trans "back to messages" %}</span>
+            </a>
+        </div>
+
+        <div data-mode="archived" data-id="{{ object.pk }}">
+            <a role="button" tabindex="0" class="mr-3 chat-delete-individual svg-group">
+                <svg fill="currentColor" viewBox="0 0 16 16" width="16" height="16">
+                    <use href="#trash"></use>
+                </svg>
+                <span class="ml-2">{% trans "delete" %}</span>
+            </a>
+        </div>
+    </div>
+
+    <ul id="message_list" class="chat">
+        {% with messages=object.to_json.messages %}
+            {% if messages|length > 10 %}
+                <a id="message_history_show" role="button" tabindex="0" title="{% trans "make it rain" %}">{% trans "only the last 10 messages are shown. click here to show all messages." %}</a>
+            {% endif %}
+
+            {% for message in messages %}
+                <li class="bubble {% if message.sender__username == user.username %}sent{% else %}received{% endif %}">
+                    <p class="text-formatted">{{ message.body|formatted|linebreaksbr }}</p>
+                    {# Translators: Archived conversation timestamp #}
+                    <span class="date-info date"><time>{{ message.sent_at|strdate|date:_("M j, Y g:i a") }}</time></span>
+                </li>
+            {% endfor %}
+        {% endwith %}
+    </ul>
+{% endblock %}

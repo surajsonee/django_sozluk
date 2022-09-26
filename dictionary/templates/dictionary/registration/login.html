@@ -1,0 +1,51 @@
+{% extends "dictionary/base.html" %}
+{% load widget_tweaks i18n %}
+
+{% block title %}{% trans "log in" context "titleblock" %}{% endblock %}
+{% block content %}
+    <h1 class="h4 mb-3"><strong>{% trans "log in" context "titleblock" %}</strong></h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-info mb-3 p-3 rounded" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <p class="text-danger">{% blocktrans with name=user.username %}just to let you know, you are already logged in as '{{ name }}'.{% endblocktrans %}</p>
+    {% endif %}
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {% for err in form.non_field_errors %}
+                <div class="alert-danger p-3 mb-3 rounded">{{ err }}</div>
+            {% endfor %}
+            <label for="loginUser">{{ form.username.label|lower }}</label>
+            {% render_field form.username type="email" id="loginUser" class="form-control" %}
+            {% for error in form.username.errors %}
+                <p class="text-danger my-3">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="loginPassword">{{ form.password.label|lower }}</label>
+            {% render_field form.password id="loginPassword" class="form-control" %}
+            {% for error in form.password.errors %}
+                <p class="text-danger my-3">{{ error }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="custom-control custom-checkbox mb-3">
+            {% render_field form.remember_me class="custom-control-input" id="remember_me" %}
+            <label class="custom-control-label" for="remember_me">{{ form.remember_me.label }}</label>
+        </div>
+
+        <div class="mb-3">
+            <a href="{% url 'password_reset' %}" class="mr-3" title="{% trans "what was it?" %}">{% trans "umm, password?" %}</a>
+            <a href="{% url 'resend-email' %}">{% trans "didn't receive confirmation email" %}</a>
+        </div>
+
+        <button type="submit" class="btn btn-django stretch">{% trans "log in" %}</button>
+    </form>
+{% endblock %}

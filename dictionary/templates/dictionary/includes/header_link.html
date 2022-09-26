@@ -1,0 +1,5 @@
+{% if not unauthorized %}
+<li {% if is_active %}class="active"{% endif %} data-lf-slug="{{ hlink_slug }}">
+    <a title="{{ hlink_description }}" href="{% url "topic_list" slug=hlink_slug %}">{{ hlink_safename }}</a>
+</li>
+{% endif %}

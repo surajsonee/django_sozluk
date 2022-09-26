@@ -1,0 +1,105 @@
+{% extends "dictionary/base.html" %}
+{% load humanize filters i18n %}
+
+{% block title %}{% blocktrans with username=recipient.username context "titleblock" %}@{{ username }} - conversation{% endblocktrans %}{% endblock %}
+{% block content %}
+    <h1 class="h4">
+        {% blocktrans trimmed with url=recipient.get_absolute_url username=recipient.username %}
+            <strong>conversation with <a href="{{ url }}">@{{ username }}</a></strong>
+        {% endblocktrans %}
+    </h1>
+
+    {% with messages=conversation.collection %}
+        <div class="chat-quick-links d-flex justify-content-between align-items-center mb-1">
+            <div class="svg-group">
+                <a href="{% url 'messages' %}" class="mr-2" title="{% trans "enough lingering here" %}">
+                    <svg fill="currentColor" width="24" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#arrow-left"></use>
+                    </svg>
+                    <span>{% trans "back to messages" %}</span>
+                </a>
+                <a role="button" tabindex="0" class="block-user-trigger sync" data-username="{{ recipient.username }}">{{ is_blocked|yesno:_("remove block,block this guy") }}</a>
+            </div>
+
+            <div data-mode="present" data-id="{{ conversation.pk }}">
+                <a role="button" tabindex="0" class="mr-3 chat-delete-individual svg-group">
+                    <svg fill="currentColor" viewBox="0 0 16 16" width="16" height="16">
+                        <use href="#trash"></use>
+                        <title>{% trans "delete" %}</title>
+                    </svg>
+                    <span class="ml-2 d-none d-sm-inline-block">{% trans "delete" %}</span>
+                </a>
+                {% if messages|length > 0 %}
+                    <a role="button" tabindex="0" class="chat-archive-individual svg-group">
+                        <svg fill="currentColor" viewBox="0 0 16 16" width="16" height="16">
+                            <use href="#archive"></use>
+                            <title>{% trans "archive" context "verb" %}</title>
+                        </svg>
+                        <span class="ml-2 d-none d-sm-inline-block">{% trans "archive" context "verb" %}</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if messages|length > 10 %}
+            <a id="message_history_show" role="button" tabindex="0" title="{% trans "make it rain" %}">{% trans "only the last 10 messages are shown. click here to show all messages." %}</a>
+        {% endif %}
+
+        {% if messages %}
+            <ul id="message_list" class="chat mb-4">
+                {% for message in messages %}
+                    {% if message.sender == user %}
+                        <li class="bubble sent">
+                            <p class="text-formatted">{{ message.body|formatted|linebreaksbr }}</p>
+                            <span class="date-info">
+                            <time role="button" tabindex="0" data-toggle="dropdown" data-id="{{ message.pk }}">{{ message.sent_at|naturaltime }}</time>
+                                {% if message.has_receipt and message.read_at %}
+                                    {% blocktrans asvar read_receipt with read_at=message.read_at|naturaltime %}seen, {{ read_at }}{% endblocktrans %}
+                                    <span title="{{ read_receipt }}">
+                                        <svg fill="currentColor" width="28" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <use href="#msgread"></use>
+                                        </svg>
+                                    </span>
+                                {% else %}
+                                    <span title="{% trans "sent" %}">
+                                        <svg fill="currentColor" width="28" height="14" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                                            <use href="#msgsent"></use>
+                                        </svg>
+                                    </span>
+                                {% endif %}
+                            </span>
+                        </li>
+                    {% else %}
+                        <li class="bubble received">
+                            <p class="text-formatted">{{ message.body|formatted|linebreaksbr }}</p>
+                            <time role="button" tabindex="0" data-toggle="dropdown" data-id="{{ message.pk }}">{{ message.sent_at|naturaltime }}</time>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="border rounded p-3 bg-light my-3">{% trans "no messages left in this conversation 🤷" %}</div>
+        {% endif %}
+    {% endwith %}
+
+
+    {% if not can_send_message %}
+        <p class="text-center">{% trans "you are not allowed to send messages to this user." %}</p>
+    {% else %}
+        {% trans "write message" as label %}
+
+        {% if not user.is_novice %}
+            <form method="post" action="{% url 'image-upload' %}" class="dropzone" id="user-image-upload" style="display: none">{% csrf_token %}</form>
+        {% endif %}
+
+        <section class="chat-reply bg-light rounded p-4 mb-3">
+            {% include "dictionary/includes/editor_buttons.html" %}
+            {% load widget_tweaks %}
+            <form method="POST" class="mt-2">
+                {% csrf_token %}
+                {% render_field form.body|attr:"autofocus" id="user_content_edit" class="mr-2 form-control" rows="5" spellcheck="true" placeholder=label aria-label=label %}
+                <button type="submit" class="btn btn-django">{% trans "send" %}</button>
+            </form>
+        </section>
+    {% endif %}
+{% endblock %}

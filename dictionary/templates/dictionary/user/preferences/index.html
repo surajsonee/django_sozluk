@@ -1,0 +1,64 @@
+{% extends "dictionary/user/preferences/base.html" %}
+{% load widget_tweaks i18n %}
+{% block title %}{% trans "settings" context "titleblock" %}{% endblock %}
+
+{% block content_preferences %}
+    <form method="post">
+
+        <div class="form-group">
+            <label class="mr-2" for="pref_messages"><strong>{{ form.message_preference.label }}</strong></label>
+            <small>{% trans "what groups can send me messages?" %}</small>
+            {% render_field form.message_preference class="form-control" id="pref_messages" %}
+
+            <div class="custom-control custom-checkbox mt-3">
+                {% render_field form.allow_receipts class="custom-control-input" id="allow_receipts" %}
+                <label class="custom-control-label" for="allow_receipts">{{ form.allow_receipts.label }}</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                {% render_field form.allow_uncategorized class="custom-control-input" id="allow_uncategorized" %}
+                <label class="custom-control-label" for="allow_uncategorized">{{ form.allow_uncategorized.label }}</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                {% render_field form.allow_site_announcements class="custom-control-input" id="allow_site_announcements" %}
+                <label class="custom-control-label" for="allow_site_announcements">{{ form.allow_site_announcements.label }}</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="d-grid grid-col-2 grid-gap-1">
+                <div>
+                    <label for="pref_entries_per_page"><strong>{{ form.entries_per_page.label }}</strong></label>
+                    {% render_field form.entries_per_page class="form-control" id="pref_entries_per_page" %}
+                </div>
+                <div>
+                    <label for="pref_topics_per_page"><strong>{{ form.topics_per_page.label }}</strong></label>
+                    {% render_field form.topics_per_page class="form-control" id="pref_topics_per_page" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid grid-col-2 grid-gap-1 grid-sm-row grid-sm-gap-0">
+            <div>
+                <div class="form-group">
+                    <label for="pref_gender"><strong>{{ form.gender.label }}</strong></label>
+                    {% render_field form.gender class="form-control" id="pref_gender" %}
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label class="d-block"><strong>{{ form.birth_date.label }}</strong></label>
+                    <label class="sr-only" for="id_birth_date_day">{% trans "Day of birth" %}</label>
+                    <label class="sr-only" for="id_birth_date_month">{% trans "Month of birth" %}</label>
+                    <label class="sr-only" for="id_birth_date_year">{% trans "Year of birth" %}</label>
+                    <div class="datepick d-grid grid-col-3 grid-gap-1">
+                        {% render_field form.birth_date class="form-control" %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-django stretch">{% trans "save preferences" %}</button>
+    </form>
+{% endblock %}
